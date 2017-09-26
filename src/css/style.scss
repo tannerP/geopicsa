@@ -1,0 +1,38 @@
+body{
+    background-color: grey;
+    display: flex;
+}
+
+$panel_width: 600px;
+$screen_height: 1300px;
+
+#map {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: $screen_height;
+    background-color: grey;
+}
+
+#control-panel{
+    padding: 0;
+    margin: 0;
+    width: $panel_width;
+    height: $screen_height;
+    background-color: grey;
+    h2 {
+        font-size: 4em;
+        text-align: center;
+    }
+    table {
+        text-align: center;
+        margin-right: auto;
+        margin-left: auto;
+        background-color: darkgrey;
+        width: $panel_width - 100px;
+        height: auto;
+        tr {
+            height: $panel_width / 8;
+        }
+    }
+}

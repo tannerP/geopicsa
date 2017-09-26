@@ -1,0 +1,31 @@
+body {
+  background-color: grey;
+  display: flex; }
+
+#map {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 1300px;
+  background-color: grey; }
+
+#control-panel {
+  padding: 0;
+  margin: 0;
+  width: 600px;
+  height: 1300px;
+  background-color: grey; }
+  #control-panel h2 {
+    font-size: 4em;
+    text-align: center; }
+  #control-panel table {
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: darkgrey;
+    width: 500px;
+    height: auto; }
+    #control-panel table tr {
+      height: 75px; }
+
+/*# sourceMappingURL=style.css.map */
