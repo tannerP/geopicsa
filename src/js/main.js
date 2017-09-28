@@ -125,13 +125,27 @@ function initMap() {
     markers.map(function(marker){
         marker.setMap(map);
     });
+
+    ko.applyBindings(new initApp());
+
+    function initApp() {
+        var self = this;
+        self.parks = ko.observableArray(DB);
+        self.removePlace  = function(place) {
+            console.log(place.park_name);
+            console.log(markers[0].label);
+            for (i = 0; i < markers.length; i++ ) {
+                marker = markers[i];
+                console.log("inside loop marker");
+                console.log(marker.label);
+                console.log(place.park_name);
+                if (marker.label === place.park_name){
+                    console.log("found match");
+                    marker.setMap(null);
+                }
+            }
+            console.log(place.park_name);
+            self.parks.remove(place);
+        };
+    }
 }
-
-function initApp() {
-    console.log("Initiating App")
-    console.log(DB)
-
-    this.parks = ko.observable(DB);
-}
-
-ko.applyBindings(new initApp());
