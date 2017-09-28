@@ -12,7 +12,7 @@ var DB = [
         park_name: "Liberty Park", lat: 47.4825537, lng: -122.2019153
     },
     {
-        park_name: "Greenlake Park",  lat: 47.6802132, lng: -122.32831880000003
+        park_name: "Greenlake Park", lat: 47.6802132, lng: -122.32831880000003
     },
     {
         park_name: "Delridge Park", lat:47.563070, lng: -122.363352

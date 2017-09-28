@@ -13,44 +13,58 @@
     <body id="body">
         <div id="map"></div>
         <div id="control-panel">
-            <h2> Filters & Controls</h2></h1>
+            <div id="seattle_based_slogan">
+            </div>
+            <h2>Hoop Maps</h2>
+            <select id="filter">
+                <option  select="selected" value="NBA">NBA</option>
+                <option value="WNBA">WNBA</option>
+                <option value="High School">High School</option>
+                <option value="My Favorite Parks">Tan's Favorite Park</option>
+            </select>
             <hr>
-            <table id="controls-table">
-                <thead>
-                    <th>Activities</th>
-                    <th>show/hide</th>
-                </thead>
-                <tbody data-bind="foreach: parks">
-                    <tr>
-                        <td data-bind="text: park_name"></td>
-                        <td><button type="checkbox"
-                                    data-bind="click:$parent.removePlace"></button></td>
-                    <!--<tr>
-                        <td> Greenlake </td>
-                        <td>
-                            <input type="checkbox">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> Benefits </td>
-                        <td>
-                            <input type="checkbox">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> Jefferson </td>
-                        <td>
-                            <input type="checkbox">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> Jefferson </td>
-                        <td>
-                            <input type="checkbox">
-                        </td>-->
-                    </tr>
-                </tbody>
-            </table>
+
+            <ul data-bind="foreach: parks">
+                <li data-bind="click:$parent.removePlace">
+                <span data-bind="text: park_name"></span>
+                </li>
+            </ul>
+            <!--<table id="controls-table">-->
+                <!--<thead>-->
+                    <!--<th>Activities</th>-->
+                    <!--<th>show/hide</th>-->
+                <!--</thead>-->
+                <!--<tbody data-bind="foreach: parks">-->
+                    <!--<tr>-->
+                        <!--<td data-bind="text: park_name"></td>-->
+                        <!--<td><button type="checkbox"-->
+                                    <!--data-bind="click:$parent.removePlace"></button></td>-->
+                    <!--&lt;!&ndash;<tr>-->
+                        <!--<td> Greenlake </td>-->
+                        <!--<td>-->
+                            <!--<input type="checkbox">-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td> Benefits </td>-->
+                        <!--<td>-->
+                            <!--<input type="checkbox">-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td> Jefferson </td>-->
+                        <!--<td>-->
+                            <!--<input type="checkbox">-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td> Jefferson </td>-->
+                        <!--<td>-->
+                            <!--<input type="checkbox">-->
+                        <!--</td>&ndash;&gt;-->
+                    <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
         </div>
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>

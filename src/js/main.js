@@ -102,7 +102,7 @@ function initMap() {
             map: map,
             title: DB[0].park_name
         });*/
-    var image = 'http://icons.iconarchive.com/icons/capital18/capital-suite/48/Misc-Basketball-icon.png';
+    var image = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
 
     var markers = DB.map(function(location, i) {
         // console.log(location.lat)

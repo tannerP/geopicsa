@@ -2,30 +2,53 @@ body {
   background-color: grey;
   display: flex; }
 
+body,
+html {
+  padding: 0;
+  margin: 0; }
+
 #map {
   padding: 0;
   margin: 0;
-  width: 100%;
+  width: 80%;
   height: 1300px;
-  background-color: grey; }
+  background-color: white; }
 
 #control-panel {
   padding: 0;
   margin: 0;
   width: 600px;
   height: 1300px;
-  background-color: grey; }
+  background-color: #bc4a10; }
+  #control-panel #seattle_based_slogan {
+    filter: grayscale(0.9) blur(2px);
+    height: 40%;
+    width: auto;
+    background-image: url(../img/seattle_skyline.png);
+    background-size: 160% auto;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    opacity: .5; }
   #control-panel h2 {
-    font-size: 4em;
-    text-align: center; }
-  #control-panel table {
+    opacity: .9;
+    padding: 0;
+    position: absolute;
+    top: 8%;
     text-align: center;
-    margin-right: auto;
-    margin-left: auto;
-    background-color: darkgrey;
-    width: 500px;
-    height: auto; }
-    #control-panel table tr {
-      height: 75px; }
+    font-size: 5em; }
+  #control-panel ul {
+    text-align: center;
+    position: relative;
+    bottom: -5%;
+    list-style: none;
+    font-size: 3em; }
+  #control-panel #filter {
+    text-align: center;
+    font-size: 2em;
+    color: grey;
+    width: 100%;
+    float: right;
+    padding: 20px 40px;
+    border: none; }
 
 /*# sourceMappingURL=style.css.map */

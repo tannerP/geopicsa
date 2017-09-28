@@ -6,33 +6,75 @@ body{
 $panel_width: 600px;
 $screen_height: 1300px;
 
+body,
+html{
+    padding: 0;
+    margin: 0;
+}
 #map {
     padding: 0;
     margin: 0;
-    width: 100%;
+    width: 80%;
     height: $screen_height;
-    background-color: grey;
+    background-color: white;
 }
 
 #control-panel{
+    #seattle_based_slogan{
+        filter: grayscale(.9) blur(2px);
+        height: 40%;
+        width: auto;
+        background-image: url(../img/seattle_skyline.png);
+        background-size:  160% auto;
+        background-repeat: no-repeat;
+        //background-image: url(../../assets/medias/seattle_skyline.png);
+        background-position: 50% 50%;
+        opacity: .5;
+    }
+
     padding: 0;
     margin: 0;
     width: $panel_width;
     height: $screen_height;
-    background-color: grey;
+    background-color: #bc4a10;
     h2 {
-        font-size: 4em;
+        opacity: .9;
+        padding: 0;
+        position: absolute;
+        top: 8%;
         text-align: center;
+        font-size: 5em;
     }
-    table {
+    ul {
         text-align: center;
-        margin-right: auto;
-        margin-left: auto;
-        background-color: darkgrey;
-        width: $panel_width - 100px;
-        height: auto;
-        tr {
-            height: $panel_width / 8;
-        }
+        position: relative;
+        bottom: -5%;
+        list-style: none;
+        font-size: 3em;
     }
+    //table {
+    //
+    //    position: absolute;
+    //    bottom: 0;
+    //    text-align: center;
+    //    margin-right: auto;
+    //    margin-left: auto;
+    //    background-color: darkgrey;
+    //    width: 100%;
+    //    height: auto;
+    //    tr {
+    //        height: $panel_width / 8;
+    //    }
+    //}
+
+    #filter {
+        text-align: center;
+        font-size: 2em;
+        color: grey;
+        width: 100%;
+        float: right;
+        padding: 20px 40px;
+        border: none;
+    }
+
 }
