@@ -16,36 +16,15 @@ This project started as part of Udacity Full Stack Web Development NanoDegree, i
 
  - Use NPM 
 
-1. Download and install NPM
-   [html5boilerplate.com](https://html5boilerplate.com/).
-2. Clone the git repo — `git clone
-   https://github.com/h5bp/html5-boilerplate.git` - and checkout the
-   [tagged release](https://github.com/h5bp/html5-boilerplate/releases)
-   you'd like to use.
-3.
-4.
-
-
+1. Download and install [NPM](https://www.npmjs.com/get-npm)
+2. `cd` to directory and run `pm install`
+3. Open index.html with a web browser, preferably Chrome. 
 ## Features
 
-* HTML5 ready. Use the new elements with confidence.
-* Designed with progressive enhancement in mind.
-* Includes:
-  * [`Normalize.css`](https://necolas.github.com/normalize.css/)
-    for CSS normalizations and common bug fixes
-  * [`jQuery`](https://jquery.com/) via CDN with [SRI Hash](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) and a local fallback
-  * A custom build of [`Modernizr`](https://modernizr.com/) for feature
-    detection
-  * [`Apache Server Configs`](https://github.com/h5bp/server-configs-apache)
-    that, among other, improve the web site's performance and security
-* Placeholder CSS Media Queries.
-* Useful CSS helper classes.
-* Default print styles, performance optimized.
-* An optimized version of the Google Universal Analytics snippet.
-* Protection against any stray `console` statements causing JavaScript
-  errors in older browsers.
-* "Delete-key friendly." Easy to strip out parts you don't need.
-* Extensive inline and accompanying documentation.
+* Display Google Maps with default markers of my favorite basketball courts.
+* Radius filtering based on a location.
+* (Possible) Display Yelps's Best Basketball Court in Seattle, WA
+[Yelp's Best Basketball Courts](https://www.yelp.com/search?find_desc=Basketball+Court&find_loc=Seattle%2C+WA)
 
 
 ## Browser support
@@ -74,15 +53,7 @@ any documentation you want to write about your project.
 
 
 ## Contributing
-
-Hundreds of developers have helped to make the HTML5 Boilerplate. Anyone is welcome to [contribute](.github/CONTRIBUTING.md),
-however, if you decide to get involved, please take a moment to review
-the [guidelines](.github/CONTRIBUTING.md):
-
-* [Bug reports](.github/CONTRIBUTING.md#bugs)
-* [Feature requests](.github/CONTRIBUTING.md#features)
-* [Pull requests](.github/CONTRIBUTING.md#pull-requests)
-
+Not supporting.
 
 ## License
 
