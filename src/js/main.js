@@ -1,9 +1,21 @@
-var map = {};
 /*Initialize map with markers and markers' animation.
 * Requires global variable DB*/
 
+var map = {};
+
+//callback function for Google Maps Ajax request
 function initMap() {
     var self = this;
+
+    var setAnimation = function(marker) {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+        return marker;
+    }
+
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: {lat: 47.6062, lng: -122.3321},
@@ -88,64 +100,80 @@ function initMap() {
             }
         ]
     });
-    /*
-        var jefferson = {lat:47.5671477, lng:-122.30768710000001};
-        var benefits = {lat: DB[1].lat, lng: DB[1].lng};
-        var marker = new google.maps.Marker({
-            position: jefferson,
-            map: map,
-            title: "Jefferson Commmunity Center"
-        });
-
-        var marker = new google.maps.Marker({
-            position: benefits,
-            map: map,
-            title: DB[0].park_name
-        });*/
+    // Google Maps
+    // Maker image url
     var image = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
-
+    //populate markers based on gobal variable DB
     var markers = DB.map(function(location, i) {
-        // console.log(location.lat)
+        // create a marker
         var marker =  new google.maps.Marker({
             position: { lat: location.lat, lng: location.lng },
             label: location.park_name,
             animation: google.maps.Animation.DROP,
                 icon: image
         });
-
+        // set up animation (BOUNCE)
         marker.addListener('click', function(){
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-            }
+            // if (marker.getAnimation() !== null) {
+            //     marker.setAnimation(null);
+            // } else {
+            //     marker.setAnimation(google.maps.Animation.BOUNCE);
+            // }
+            marker = setAnimation(marker);
+            // if (marker.getAnimation() !== null) {
+            //     marker.setAnimation(null);
+            // } else {
+            //     marker.setAnimation(google.maps.Animation.BOUNCE);
+            // }
         });
         return marker;
     });
+    // finally rendering markers on map
     markers.map(function(marker){
         marker.setMap(map);
     });
 
-    ko.applyBindings(new initApp());
-
+    // Knockout callback function
     function initApp() {
-        var self = this;
-        self.parks = ko.observableArray(DB);
-        self.removePlace  = function(place) {
-            console.log(place.park_name);
-            console.log(markers[0].label);
+        var root = this;
+
+        // initializing obsv array with one obsv variable
+        root.obsv_list = ko.observableArray();
+        for(var i in DB) {
+            var marker = DB[i];
+            console.log(marker)
+            var obsv_isCrossed = ko.observable(marker.filtered);
+            root.obsv_list.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed});
+        }
+        console.log(root.obsv_list());
+        // root.parks = ko.observableArray(DB);
+
+        // function removes marker from Google Map
+        root.removePlace  = function(place) {
             for (i = 0; i < markers.length; i++ ) {
                 marker = markers[i];
-                console.log("inside loop marker");
-                console.log(marker.label);
-                console.log(place.park_name);
                 if (marker.label === place.park_name){
-                    console.log("found match");
-                    marker.setMap(null);
+                    marker = setAnimation(marker);
+                    place.filtered = true;
                 }
+                place.filtered = false;
             }
-            console.log(place.park_name);
-            self.parks.remove(place);
+            // change style
+            // self.parks.remove(place);
         };
+        // toggle line-through.
+        root.lineThrough = ko.pureComputed(function() {
+            var filter;
+            console.log("is filtered: "+ filtered);
+            var result;
+            if (filtered =='true')   {
+                return 'lineThrough';
+            }
+            return "";
+        });
     }
+
+
+    // Bind knockout to page
+    ko.applyBindings(new initApp());
 }

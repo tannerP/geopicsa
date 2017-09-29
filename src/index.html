@@ -13,8 +13,7 @@
     <body id="body">
         <div id="map"></div>
         <div id="control-panel">
-            <div id="seattle_based_slogan">
-            </div>
+            <div id="seattle_based_slogan"></div>
             <h2>Hoop Maps</h2>
             <select id="filter">
                 <option  select="selected" value="NBA">NBA</option>
@@ -23,48 +22,15 @@
                 <option value="My Favorite Parks">Tan's Favorite Park</option>
             </select>
             <hr>
-
-            <ul data-bind="foreach: parks">
-                <li data-bind="click:$parent.removePlace">
-                <span data-bind="text: park_name"></span>
+            <ul data-bind="foreach: obsv_list">
+                <!--<li data-bind="css:$root.lineThrough(filtered)">-->
+                <li>
+                    <span data-bind="click:$root.removePlace, text:park_name"></span>
+                <!--<span data-bind="css:filtered? 'line-through':''">-->
+                    <!--<span data-bind="text: park_name"></span>-->
+                <!--</span>-->
                 </li>
             </ul>
-            <!--<table id="controls-table">-->
-                <!--<thead>-->
-                    <!--<th>Activities</th>-->
-                    <!--<th>show/hide</th>-->
-                <!--</thead>-->
-                <!--<tbody data-bind="foreach: parks">-->
-                    <!--<tr>-->
-                        <!--<td data-bind="text: park_name"></td>-->
-                        <!--<td><button type="checkbox"-->
-                                    <!--data-bind="click:$parent.removePlace"></button></td>-->
-                    <!--&lt;!&ndash;<tr>-->
-                        <!--<td> Greenlake </td>-->
-                        <!--<td>-->
-                            <!--<input type="checkbox">-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td> Benefits </td>-->
-                        <!--<td>-->
-                            <!--<input type="checkbox">-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td> Jefferson </td>-->
-                        <!--<td>-->
-                            <!--<input type="checkbox">-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td> Jefferson </td>-->
-                        <!--<td>-->
-                            <!--<input type="checkbox">-->
-                        <!--</td>&ndash;&gt;-->
-                    <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
         </div>
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
@@ -74,5 +40,10 @@
         <script defer async
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=initMap">
         </script>
+        <style>
+            .line-through {
+                text-decoration: line-through;
+            }
+        </style>
     </body>
 </html>

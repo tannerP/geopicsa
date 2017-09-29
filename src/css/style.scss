@@ -2,7 +2,6 @@ body{
     background-color: grey;
     display: flex;
 }
-
 $panel_width: 600px;
 $screen_height: 1300px;
 
@@ -31,7 +30,6 @@ html{
         background-position: 50% 50%;
         opacity: .5;
     }
-
     padding: 0;
     margin: 0;
     width: $panel_width;
@@ -52,21 +50,22 @@ html{
         list-style: none;
         font-size: 3em;
     }
-    //table {
-    //
-    //    position: absolute;
-    //    bottom: 0;
-    //    text-align: center;
-    //    margin-right: auto;
-    //    margin-left: auto;
-    //    background-color: darkgrey;
-    //    width: 100%;
-    //    height: auto;
-    //    tr {
-    //        height: $panel_width / 8;
-    //    }
-    //}
+    /*
+    table {
 
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+        margin-right: auto;
+        margin-left: auto;
+        background-color: darkgrey;
+        width: 100%;
+        height: auto;
+        tr {
+            height: $panel_width / 8;
+        }
+    }
+    */
     #filter {
         text-align: center;
         font-size: 2em;
