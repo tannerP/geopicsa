@@ -3,10 +3,11 @@ body{
     display: flex;
 }
 $panel_width: 600px;
-$screen_height: 1300px;
+$screen_height: 1000px;
 
 body,
 html{
+    font-family: "Montserrat", sans-serif;
     padding: 0;
     margin: 0;
 }
@@ -20,10 +21,15 @@ html{
 
 body{ cursor: default;}
 #control-panel{
+        height: $screen_height;
+        width: $panel_width;
+        background-color: #701705;
     #weather {
-        position: absolute;
-        left: 0%;
+        padding: 0;
+        margin: 0;
+        left: 0;
         top: 0;
+        position: absolute;
         #weather-icon {
             padding: 0;
             display: block;
@@ -39,59 +45,44 @@ body{ cursor: default;}
             top: -100px;
             right: -100px;
             font-size: 3em;
-            color: blanchedalmond;
+            color: #e86100;
             opacity: .6;
             //float: right;
         }
     }
-    padding: 0;
-    margin: 0;
-    width: $panel_width;
-    height: $screen_height;
-    background-color: #bfbcbb;
     h2 {
-        opacity: .9;
+        opacity: .7;
         padding: 0;
-        position: absolute;
-        top: 8%;
         text-align: center;
-        font-size: 5em;
+        font-size: 60px;
     }
     ul {
+        width: 100%;
+        height:  auto;
+        background-repeat: no-repeat;
+        background-size: 0% auto;
+        background-position: 50% 50%;
         text-align: center;
         position: relative;
         bottom: -5%;
         list-style: none;
         font-size: 3em;
     }
-    /*
-    table {
-
-        position: absolute;
-        bottom: 0;
-        text-align: center;
-        margin-right: auto;
-        margin-left: auto;
-        background-color: darkgrey;
-        width: 100%;
-        height: auto;
-        tr {
-            height: $panel_width / 8;
-        }
-    }
-    */
     #filter {
+        background-color: #bdbdbd;
+        width: 100%;
+        font-weight: 800;
         text-align: center;
         font-size: 2em;
-        color: grey;
-        width: 100%;
+        color: white;
+        height: auto;
         float: right;
         padding: 20px 40px;
         border: none;
     }
     #seattle-skyline {
-        opdacity: .3;
-        filter: blur(2px);
-        filter: grayscale(100%);
+        width: 100%;
+        opacity: .6;
+        filter: blur(1px);
     }
 }

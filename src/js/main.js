@@ -7,6 +7,7 @@ var map = {};
 function initMap() {
     var self = this;
 
+    //G Maps animation
     var setAnimation = function(marker) {
         if (marker.getAnimation() !== null) {
             marker.setAnimation(null);
@@ -15,9 +16,8 @@ function initMap() {
         }
         return marker;
     }
-
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
+        zoom: 11,
         center: {lat: 47.6062, lng: -122.3321},
         styles: [
             {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
@@ -100,7 +100,8 @@ function initMap() {
             }
         ]
     });
-    // Google Maps
+
+    // G Maps
     // Maker image url
     var image = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
     //populate markers based on gobal variable DB
@@ -123,14 +124,32 @@ function initMap() {
         });
         return marker;
     });
+
     // finally rendering markers on map
     markers.map(function(marker){
         marker.setMap(map);
     });
+
+    var weather;
     // Knockout callback function
     function initApp() {
         var root = this;
         root.obsv_list = ko.observableArray();
+        root.weather = ko.observable();
+        root.weatherIcon_url = ko.observable({});
+        //get Seattle weather conditons
+        var weather_url = "http://api.wunderground.com/api/a4e4d43e9da41acf/conditions/q/WA/Seattle.json";
+            $.getJSON(weather_url, function (response) {
+                try {
+                    console.log(response.current_observation)
+                    root.weatherIcon_url(response.current_observation.icon_url);
+                    root.weather(response.current_observation.feelslike_f);
+                    console.log(root.weatherIcon_url());
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            });
 
         // initializing obsv array with one obsv variable
         for(var i in DB) {

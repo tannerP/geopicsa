@@ -18,4 +18,3 @@ var DB = [
         filtered: false, park_name: "Delridge Park", lat:47.563070, lng: -122.363352
     }
 ];
-

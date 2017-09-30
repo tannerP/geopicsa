@@ -1,12 +1,7 @@
 # GeoPicsa
 
-[![Build Status](https://travis-ci.org/h5bp/html5-boilerplate.svg)](https://travis-ci.org/h5bp/html5-boilerplate)
-[![devDependency Status](https://david-dm.org/h5bp/html5-boilerplate/dev-status.svg)](https://david-dm.org/h5bp/html5-boilerplate#info=devDependencies)
-
-Geopicsa is a browser application to explore Instagram photos using a map.
-
-
-This project started as part of Udacity Full Stack Web Development NanoDegree, in September 2017.
+Geopicsa is a browser application to explore local basketball activities.
+This project started as part of Udacity Full Stack Web Development NanoDegree in September 2017.
 
 * Source: [https://github.com/tannerP/geopicsa](https://github.com/tannerP/geopicsa)
 * Twitter: [@tannerphan](https://twitter.com/tannerphan)
@@ -14,11 +9,16 @@ This project started as part of Udacity Full Stack Web Development NanoDegree, i
 
 ## Quick start
 
- - Use NPM 
-
 1. Download and install [NPM](https://www.npmjs.com/get-npm)
 2. `cd` to directory and run `pm install`
 3. Open index.html with a web browser, preferably Chrome. 
+
+## Built With
+   1. [Yelp API](https://www.yelp.com/developers/documentation/v2/overview) - To connect people with great local businesses.
+   2. [Wunderground API](https://www.wunderground.com/weather/api/) - An IBM company.
+   3. [Google Maps API](https://developers.google.com/maps/documentation/javascript) - Javascript API.
+   4. [KnockoutJS](http://knockoutjs.com/index.html) - MVVM JS framework.
+
 ## Features
 
 * Display Google Maps with default markers of my favorite basketball courts.
@@ -35,14 +35,6 @@ This project started as part of Udacity Full Stack Web Development NanoDegree, i
 * Internet Explorer 9+
 * Opera *(latest 2)*
 * Safari *(latest 2)*
-
-*This doesn't mean that HTML5 Boilerplate cannot be used in older browsers,
-just that we'll ensure compatibility with the ones mentioned above.*
-
-If you need legacy browser support you
-can use [HTML5 Boilerplate v4](https://github.com/h5bp/html5-boilerplate/tree/v4) (IE 6+, Firefox 3.6+, Safari 4+),
-or [HTML5 Boilerplate v5](https://github.com/h5bp/html5-boilerplate/tree/v5.0.0) (IE8+). They are no longer actively developed.
-
 
 ## Documentation
 

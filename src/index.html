@@ -9,11 +9,16 @@
         <link rel="manifest" href="site.webmanifest">
         <link rel="apple-touch-icon" href="icon.png">
         <link rel="stylesheet" href="css/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     </head>
     <body id="body">
         <div id="map"></div>
         <div id="control-panel">
-            <div id="seattle_based_slogan"></div>
+            <div id="weather">
+                <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_url()} " alt="weather icon">
+                <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
+            </div>
+            <img id="seattle-skyline" src="img/seattle_skyline.png">
             <h2>Hoop Maps</h2>
             <select id="filter">
                 <option  select="selected" value="NBA">NBA</option>
@@ -22,7 +27,9 @@
                 <option value="My Favorite Parks">Tan's Favorite Park</option>
             </select>
             <hr>
-            <ul data-bind="foreach: obsv_list">
+            <!--<span id="weather_icon" data-bind=" text: weatherIcon_url"></span>-->
+            <div id='content'>
+            <ul data-bind="foreach: obsv_list" style="background-image:url('img/renton.png')">
                 <li data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
                     <span data-bind="text: isCrossed()"></span>
                     <span data-bind="click:$root.removePlace, text:park_name"></span>
@@ -31,18 +38,24 @@
                 <!--</span>-->
                 </li>
             </ul>
+            </div>
         </div>
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-        <script  src="node_modules/knockout/build/output/knockout-latest.js"></script>
-        <script  src="js/DB.js"></script>
-        <script  src="js/main.js"></script>
+        <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
+        <script src="js/DB.js"></script>
+        <script src="js/main.js"></script>
         <script defer async
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=initMap">
         </script>
         <style>
             .line-through {
                 text-decoration: line-through;
+            }
+            #weather-icon{
+                opacity: .1;
+                width: 250px;
+                height: auto;
             }
             body{ cursor: default;}
         </style>

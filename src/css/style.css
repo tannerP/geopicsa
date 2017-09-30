@@ -4,6 +4,7 @@ body {
 
 body,
 html {
+  font-family: "Montserrat", sans-serif;
   padding: 0;
   margin: 0; }
 
@@ -11,38 +12,22 @@ html {
   padding: 0;
   margin: 0;
   width: 80%;
-  height: 1300px;
+  height: 1000px;
   background-color: white; }
 
 body {
   cursor: default; }
 
 #control-panel {
-  padding: 0;
-  margin: 0;
+  height: 1000px;
   width: 600px;
-  height: 1300px;
-  background-color: #bfbcbb;
-    /*
-    table {
-
-        position: absolute;
-        bottom: 0;
-        text-align: center;
-        margin-right: auto;
-        margin-left: auto;
-        background-color: darkgrey;
-        width: 100%;
-        height: auto;
-        tr {
-            height: $panel_width / 8;
-        }
-    }
-    */ }
+  background-color: #701705; }
   #control-panel #weather {
-    position: absolute;
-    left: 0%;
-    top: 0; }
+    padding: 0;
+    margin: 0;
+    left: 0;
+    top: 0;
+    position: absolute; }
     #control-panel #weather #weather-icon {
       padding: 0;
       display: block;
@@ -54,32 +39,38 @@ body {
       top: -100px;
       right: -100px;
       font-size: 3em;
-      color: blanchedalmond;
+      color: #e86100;
       opacity: .6; }
   #control-panel h2 {
-    opacity: .9;
+    opacity: .7;
     padding: 0;
-    position: absolute;
-    top: 8%;
     text-align: center;
-    font-size: 5em; }
+    font-size: 60px; }
   #control-panel ul {
+    width: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    background-size: 0% auto;
+    background-position: 50% 50%;
     text-align: center;
     position: relative;
     bottom: -5%;
     list-style: none;
     font-size: 3em; }
   #control-panel #filter {
+    background-color: #bdbdbd;
+    width: 100%;
+    font-weight: 800;
     text-align: center;
     font-size: 2em;
-    color: grey;
-    width: 100%;
+    color: white;
+    height: auto;
     float: right;
     padding: 20px 40px;
     border: none; }
   #control-panel #seattle-skyline {
-    opdacity: .3;
-    filter: blur(2px);
-    filter: grayscale(100%); }
+    width: 100%;
+    opacity: .6;
+    filter: blur(1px); }
 
 /*# sourceMappingURL=style.css.map */
