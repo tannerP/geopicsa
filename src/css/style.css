@@ -14,21 +14,48 @@ html {
   height: 1300px;
   background-color: white; }
 
+body {
+  cursor: default; }
+
 #control-panel {
   padding: 0;
   margin: 0;
   width: 600px;
   height: 1300px;
-  background-color: #bc4a10; }
-  #control-panel #seattle_based_slogan {
-    filter: grayscale(0.9) blur(2px);
-    height: 40%;
-    width: auto;
-    background-image: url(../img/seattle_skyline.png);
-    background-size: 160% auto;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    opacity: .5; }
+  background-color: #bfbcbb;
+    /*
+    table {
+
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+        margin-right: auto;
+        margin-left: auto;
+        background-color: darkgrey;
+        width: 100%;
+        height: auto;
+        tr {
+            height: $panel_width / 8;
+        }
+    }
+    */ }
+  #control-panel #weather {
+    position: absolute;
+    left: 0%;
+    top: 0; }
+    #control-panel #weather #weather-icon {
+      padding: 0;
+      display: block;
+      opacity: .5;
+      width: 250px;
+      height: auto; }
+    #control-panel #weather #weather-temp {
+      position: relative;
+      top: -100px;
+      right: -100px;
+      font-size: 3em;
+      color: blanchedalmond;
+      opacity: .6; }
   #control-panel h2 {
     opacity: .9;
     padding: 0;
@@ -50,5 +77,9 @@ html {
     float: right;
     padding: 20px 40px;
     border: none; }
+  #control-panel #seattle-skyline {
+    opdacity: .3;
+    filter: blur(2px);
+    filter: grayscale(100%); }
 
 /*# sourceMappingURL=style.css.map */
