@@ -3,7 +3,7 @@
  */
 var DB = [
     {
-        filtered: true, park_name: "Jefferson Park", lat: 47.6062, lng: -122.3321
+        filtered: false, park_name: "Jefferson Park", lat: 47.6062, lng: -122.3321
     },
     {
         filtered: false, park_name: "Bennefits Park", lat: 47.5190676, lng: -122.28414129999999

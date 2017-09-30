@@ -120,11 +120,6 @@ function initMap() {
             //     marker.setAnimation(google.maps.Animation.BOUNCE);
             // }
             marker = setAnimation(marker);
-            // if (marker.getAnimation() !== null) {
-            //     marker.setAnimation(null);
-            // } else {
-            //     marker.setAnimation(google.maps.Animation.BOUNCE);
-            // }
         });
         return marker;
     });
@@ -132,37 +127,28 @@ function initMap() {
     markers.map(function(marker){
         marker.setMap(map);
     });
-
     // Knockout callback function
     function initApp() {
         var root = this;
+        root.obsv_list = ko.observableArray();
 
         // initializing obsv array with one obsv variable
-        root.obsv_list = ko.observableArray();
         for(var i in DB) {
             var marker = DB[i];
-            console.log(marker)
             var obsv_isCrossed = ko.observable(marker.filtered);
             root.obsv_list.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed});
         }
-        console.log(root.obsv_list());
-        // root.parks = ko.observableArray(DB);
-
         // function removes marker from Google Map
         root.removePlace  = function(place) {
             for (i = 0; i < markers.length; i++ ) {
                 marker = markers[i];
                 if (marker.label === place.park_name){
-                    marker = setAnimation(marker);
-                    place.filtered = true;
+                    marker = setAnimation(marker); //need to reference original markers
+                    place.isCrossed(!place.isCrossed());
                 }
-                place.filtered = false;
             }
-            // change style
-            // self.parks.remove(place);
         };
-        // toggle line-through.
-        root.lineThrough = ko.pureComputed(function() {
+        /*root.lineThrough = ko.pureComputed(function() {
             var filter;
             console.log("is filtered: "+ filtered);
             var result;
@@ -170,10 +156,8 @@ function initMap() {
                 return 'lineThrough';
             }
             return "";
-        });
+        });*/
     }
-
-
     // Bind knockout to page
     ko.applyBindings(new initApp());
 }

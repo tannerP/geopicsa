@@ -23,8 +23,8 @@
             </select>
             <hr>
             <ul data-bind="foreach: obsv_list">
-                <!--<li data-bind="css:$root.lineThrough(filtered)">-->
-                <li>
+                <li data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
+                    <span data-bind="text: isCrossed()"></span>
                     <span data-bind="click:$root.removePlace, text:park_name"></span>
                 <!--<span data-bind="css:filtered? 'line-through':''">-->
                     <!--<span data-bind="text: park_name"></span>-->
@@ -44,6 +44,7 @@
             .line-through {
                 text-decoration: line-through;
             }
+            body{ cursor: default;}
         </style>
     </body>
 </html>
