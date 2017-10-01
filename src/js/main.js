@@ -3,14 +3,42 @@
 
 var map = {};
 
-//callback function for Google Maps Ajax request
+// Callback function for Google Maps Ajax request
+// And Knockout binding.
 function initMap() {
     var self = this;
+    var weather;
 
-    //G Maps animation
+    //Google Maps animation
     var setAnimation = function(marker) {
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+        // console.log(contentString)
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
         if (marker.getAnimation() !== null) {
             marker.setAnimation(null);
+            infowindow.close(map,marker);
+
         } else {
             marker.setAnimation(google.maps.Animation.BOUNCE);
         }
@@ -20,13 +48,13 @@ function initMap() {
         zoom: 11,
         center: {lat: 47.6062, lng: -122.3321},
         styles: [
-            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {elementType: 'geometry', stylers: [{color: '#6c736f'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#6c736f'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#6c736f'}]},
             {
                 featureType: 'administrative.locality',
                 elementType: 'labels.text.fill',
-                stylers: [{color: '#d59563'}]
+                stylers: [{color: '#123f09'}]
             },
             {
                 featureType: 'poi',
@@ -36,7 +64,7 @@ function initMap() {
             {
                 featureType: 'poi.park',
                 elementType: 'geometry',
-                stylers: [{color: '#263c3f'}]
+                stylers: [{color: '#6c736f'}]
             },
             {
                 featureType: 'poi.park',
@@ -46,12 +74,12 @@ function initMap() {
             {
                 featureType: 'road',
                 elementType: 'geometry',
-                stylers: [{color: '#38414e'}]
+                stylers: [{color: '#6c736f'}]
             },
             {
                 featureType: 'road',
                 elementType: 'geometry.stroke',
-                stylers: [{color: '#212a37'}]
+                stylers: [{color: '#6c736f'}]
             },
             {
                 featureType: 'road',
@@ -66,7 +94,7 @@ function initMap() {
             {
                 featureType: 'road.highway',
                 elementType: 'geometry.stroke',
-                stylers: [{color: '#1f2835'}]
+                stylers: [{color: '#6c736f'}]
             },
             {
                 featureType: 'road.highway',
@@ -76,7 +104,7 @@ function initMap() {
             {
                 featureType: 'transit',
                 elementType: 'geometry',
-                stylers: [{color: '#2f3948'}]
+                stylers: [{color: '#6c736f'}]
             },
             {
                 featureType: 'transit.station',
@@ -86,34 +114,39 @@ function initMap() {
             {
                 featureType: 'water',
                 elementType: 'geometry',
-                stylers: [{color: '#17263c'}]
+                stylers: [{color: '#a1a1a1'}]
             },
             {
                 featureType: 'water',
                 elementType: 'labels.text.fill',
-                stylers: [{color: '#515c6d'}]
+                stylers: [{color: '#a1a1a1'}]
             },
             {
                 featureType: 'water',
                 elementType: 'labels.text.stroke',
-                stylers: [{color: '#17263c'}]
+                stylers: [{color: '#a1a1a1'}]
             }
         ]
     });
 
-    // G Maps
+    // Google Maps
     // Maker image url
-    var image = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
     //populate markers based on gobal variable DB
+    var marker_img_url = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
     var markers = DB.map(function(location, i) {
         // create a marker
         var marker =  new google.maps.Marker({
             position: { lat: location.lat, lng: location.lng },
-            label: location.park_name,
             animation: google.maps.Animation.DROP,
-                icon: image
+            icon: marker_img_url,
+            label: location.park_name
         });
         // set up animation (BOUNCE)
+        // var marker = new google.maps.Marker({
+        //     position: uluru,
+        //     map: map,
+        //     title: 'Uluru (Ayers Rock)'
+        // });
         marker.addListener('click', function(){
             // if (marker.getAnimation() !== null) {
             //     marker.setAnimation(null);
@@ -124,22 +157,22 @@ function initMap() {
         });
         return marker;
     });
-
-    // finally rendering markers on map
+    //rendering markers on map
     markers.map(function(marker){
         marker.setMap(map);
     });
 
-    var weather;
-    // Knockout callback function
+    // Knockout
     function initApp() {
         var root = this;
         root.obsv_list = ko.observableArray();
         root.weather = ko.observable();
         root.weatherIcon_url = ko.observable({});
+        root.pointofInterest = ko.observable({});
+
         //get Seattle weather conditons
         var weather_url = "http://api.wunderground.com/api/a4e4d43e9da41acf/conditions/q/WA/Seattle.json";
-            $.getJSON(weather_url, function (response) {
+        $.getJSON(weather_url, function (response) {
                 try {
                     console.log(response.current_observation)
                     root.weatherIcon_url(response.current_observation.icon_url);
@@ -152,19 +185,28 @@ function initMap() {
             });
 
         // initializing obsv array with one obsv variable
-        for(var i in DB) {
+        for (var i in DB) {
             var marker = DB[i];
+            var city = ko.observable();
             var obsv_isCrossed = ko.observable(marker.filtered);
-            root.obsv_list.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed});
+            root.obsv_list.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed, 'city':city});
         }
         // function removes marker from Google Map
-        root.removePlace  = function(place) {
+        root.toggleListItem  = function(place) {
+            //stop point of interest animation
+
+            //pointofInterest = place;
             for (i = 0; i < markers.length; i++ ) {
                 marker = markers[i];
+                // find marker, then change list style and animate.
+                // console.log("label" + place.park_name);
+                // console.log(marker().label);
                 if (marker.label === place.park_name){
                     marker = setAnimation(marker); //need to reference original markers
                     place.isCrossed(!place.isCrossed());
+                    // label: location.park_name,
                 }
+                // stop last marker's animation, and style.
             }
         };
         /*root.lineThrough = ko.pureComputed(function() {
@@ -177,6 +219,5 @@ function initMap() {
             return "";
         });*/
     }
-    // Bind knockout to page
     ko.applyBindings(new initApp());
 }
