@@ -14,20 +14,17 @@
     <body id="body">
         <div id="map"></div>
         <div id="control-panel">
-            <div id="weather">
-                <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_url()} " alt="weather icon">
-                <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
-            </div>
-            <img id="seattle-skyline" src="img/seattle_skyline.png">
-            <h2>Hoop Maps</h2>
-            <select id="filter">
-                <option  select="selected" value="NBA">NBA</option>
+            <h1 id="panel-name">My Basketball Courts</h1>
+            <div id="filter">
+            <select>
+                <option select="selected" value="NBA">NBA</option>
                 <option value="WNBA">WNBA</option>
                 <option value="High School">High School</option>
                 <option value="My Favorite Parks">Tan's Favorite Park</option>
             </select>
+            </div>
             <div id='content'>
-                <ul data-bind="foreach: obsv_list">
+                <ul id="park-list" data-bind="foreach: obsv_list">
                     <li data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
                         <span data-bind="text: city"></span>
                         <span data-bind="click:$root.toggleListItem, text:park_name"></span>
@@ -35,6 +32,17 @@
                         <!--<span data-bind="text: park_name"></span>-->
                     <!--</span>-->
                     </li>
+                </ul>
+                <hr>
+                <div id="weather">
+                    <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_url()} " alt="weather icon">
+                    <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
+                </div>
+                <ul id="filter-list" data-bind="foreach: yelp_data">
+                    <li>
+                        <span data-bind="text: $data"></span>
+                    </li>
+                    <!--<li> cities </li>-->
                 </ul>
             </div>
         </div>

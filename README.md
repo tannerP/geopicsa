@@ -15,7 +15,7 @@ This project started as part of Udacity Full Stack Web Development NanoDegree in
 
 ## Built With
    1. [Yelp API](https://www.yelp.com/developers/documentation/v2/overview) - To connect people with great local businesses.
-   2. [Wunderground API](https://www.wunderground.com/weather/api/) - An IBM company.
+   2. [Wunderground API](https://www.wunderground.com/weather/api/) - Current weather information.
    3. [Google Maps API](https://developers.google.com/maps/documentation/javascript) - Javascript API.
    4. [KnockoutJS](http://knockoutjs.com/index.html) - MVVM JS framework.
 

@@ -8,10 +8,25 @@ var map = {};
 function initMap() {
     var self = this;
     var weather;
+    var current_park;
+    var current_marker;
 
     //Google Maps animation
     var setAnimation = function(marker) {
-        var contentString = '<div id="content">'+
+        if ( current_marker === marker) {
+            return marker;
+        }
+        else if (!marker) {
+            return marker;
+        }
+        else if (!current_marker) {
+            current_marker = marker;
+        }
+        else{
+            current_marker.setAnimation(null);
+            current_marker = marker;
+        }
+        /*  var contentString = '<div id="content">'+
             '<div id="siteNotice">'+
             '</div>'+
             '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
@@ -31,19 +46,13 @@ function initMap() {
             '(last visited June 22, 2009).</p>'+
             '</div>'+
             '</div>';
-        // console.log(contentString)
         var infowindow = new google.maps.InfoWindow({
             content: contentString
-        });
-        if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
-            infowindow.close(map,marker);
+        });*/
+        // current_marker = marker;
+        return current_marker.setAnimation(google.maps.Animation.BOUNCE);
+   };
 
-        } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
-        return marker;
-    }
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 11,
         center: {lat: 47.6062, lng: -122.3321},
@@ -147,23 +156,18 @@ function initMap() {
         //     map: map,
         //     title: 'Uluru (Ayers Rock)'
         // });
-        marker.addListener('click', function(){
-            // if (marker.getAnimation() !== null) {
-            //     marker.setAnimation(null);
-            // } else {
-            //     marker.setAnimation(google.maps.Animation.BOUNCE);
-            // }
-            marker = setAnimation(marker);
-        });
+        // marker.addListener('click', function(){
+        //     marker = setAnimation(marker);
+        // });
         return marker;
     });
     //rendering markers on map
     markers.map(function(marker){
         marker.setMap(map);
     });
-
     // Knockout
     function initApp() {
+        buildFilterList(DB);
         var root = this;
         root.obsv_list = ko.observableArray();
         root.weather = ko.observable();
@@ -192,22 +196,27 @@ function initMap() {
             root.obsv_list.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed, 'city':city});
         }
         // function removes marker from Google Map
-        root.toggleListItem  = function(place) {
+        root.toggleListItem  = function(location) {
+            if(current_park){
+                current_park.isCrossed(!current_park.isCrossed());
+            }
+            current_park = location;
             //stop point of interest animation
-
-            //pointofInterest = place;
             for (i = 0; i < markers.length; i++ ) {
                 marker = markers[i];
                 // find marker, then change list style and animate.
-                // console.log("label" + place.park_name);
-                // console.log(marker().label);
-                if (marker.label === place.park_name){
+                // console.log("label" +  location.park_name);
+                // console.log(marker.label);
+                if (marker.label === location.park_name){
                     marker = setAnimation(marker); //need to reference original markers
-                    place.isCrossed(!place.isCrossed());
-                    // label: location.park_name,
+                    location.isCrossed(!location.isCrossed()); break;
+                }
+                else{
+                      location.isCrossed(false);
                 }
                 // stop last marker's animation, and style.
             }
+            // console.log(  location.isCrossed());
         };
         /*root.lineThrough = ko.pureComputed(function() {
             var filter;

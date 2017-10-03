@@ -26,61 +26,66 @@ body {
   height: 1000px;
   width: 600px;
   color: whitesmoke; }
+  #control-panel #panel-name {
+    z-index: 3;
+    margin: 0;
+    text-align: center;
+    font-size: 50px; }
   #control-panel #weather {
     padding: 0;
     margin: 0;
-    right: 35%;
-    top: 0.1%;
-    position: absolute; }
+    margin-left: 80%;
+    top: -6%; }
     #control-panel #weather #weather-icon {
-      filter: grayscale(1);
-      padding: 0;
       display: block;
-      opacity: .8;
-      width: 150px;
+      filter: grayscale(0.5);
+      padding: 0;
+      margin: 0;
+      opacity: 1;
+      width: 60px;
       height: auto; }
     #control-panel #weather #weather-temp {
       position: relative;
-      top: -40px;
-      right: -80px;
-      font-size: 1.2em;
-      color: orangered;
+      bottom: 10px;
+      right: -20px;
+      font-size: .8em;
+      color: #f1fffd;
       font-weight: bold; }
   #control-panel #content {
-    position: relative;
-    height: 75%;
+    height: 82%;
     background-color: black;
-    opacity: .5; }
-  #control-panel h2 {
-    z-index: 3;
-    margin: 0;
-    text-align: center;
-    font-size: 60px; }
-  #control-panel ul {
-    width: 100%;
-    height: auto;
-    text-align: center;
-    position: relative;
-    bottom: -5%;
-    list-style: none;
-    font-size: 3em; }
+    opacity: .5;
+    align-content: center; }
+    #control-panel #content #park-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: auto;
+      margin-right: auto;
+      margin-left: auto;
+      text-align: center;
+      bottom: 0;
+      font-size: 2.8em; }
+    #control-panel #content #filter-list {
+      position: absolute;
+      bottom: 0;
+      right: 2%;
+      list-style: none;
+      text-align: right; }
   #control-panel #filter {
-    z-index: 3;
-    background-color: #110907;
-    width: 100%;
-    font-weight: 800;
-    text-align: center;
-    font-size: 2em;
-    color: white;
-    height: auto;
-    float: right;
-    padding: 10px 40px;
-    border: none; }
+    height: auto; }
+    #control-panel #filter select {
+      width: 100%;
+      border: none;
+      display: block;
+      z-index: 10;
+      background-color: #110907;
+      font-weight: 400;
+      text-align: center;
+      font-size: 2em;
+      color: white;
+      height: 100%; }
     #control-panel #filter option {
       opacity: .5; }
-  #control-panel #seattle-skyline {
-    width: 100%;
-    opacity: .6;
-    filter: blur(1px); }
 
 /*# sourceMappingURL=style.css.map */
