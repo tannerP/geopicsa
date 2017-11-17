@@ -1,6 +1,6 @@
 # editorconfig.org
 
-root = true
+UI = true
 
 [*]
 charset = utf-8
