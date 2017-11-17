@@ -36,7 +36,7 @@
                 </ul>
                 <hr>
                 <div id="weather">
-                    <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_url()} " alt="weather icon">
+                    <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
                     <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
                 </div>
                 <!--<ul id="filter-list" data-bind="foreach: yelp_data">-->
@@ -51,7 +51,6 @@
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/DB.js"></script>
-        <!--<script src="js/APIs.js"></script>-->
         <script src="js/main.js"></script>
         <script defer async
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=initApp">

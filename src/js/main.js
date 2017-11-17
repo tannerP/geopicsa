@@ -1,49 +1,25 @@
-/*Initialize map with markers and markers' animation.
-* Requires global variable DB*/
-var map = {};
 // Callback function for Google Maps Ajax request
 // And Knockout binding.
+/*@description callback function for google maps async call in index.html
+ * */
 function initApp() {
-    // Knockout
+    // Knockout App
     function initKOApp() {
-        var self = this;
-        var weather;
-        // Knockout observables
+        var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/conditions/q/WA/Seattle.json",
+            MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png',
+            current_selection = {
+                location: "",
+                marker: null,
+                infowindow: null
+            };
         var root = this;
-        root.locations = ko.observableArray();
-        root.weather = ko.observable();
-        root.weatherIcon_url = ko.observable({});
-        root.pointofInterest = ko.observable({});
+            root.locations = ko.observableArray();
+            root.weather = ko.observable();
+            root.weatherIcon_img= ko.observable({});
 
-        var current_location;
-        var current_marker;
-        var setAnimation = function(marker, locations) {
-            if (current_marker) {
-                if (marker === current_marker) { return; }
-                current_marker.setAnimation(null);
-            }
-            
-            if (current_location) {
-                current_location.isCrossed(false);
-            }
-
-
-            // find corresponding marker on
-            for (i = 0; i < locations().length; i++) {
-                var loc = locations()[i];
-                if ( loc.park_name === marker.label) {
-                    // loc.isCrossed(!loc.isCrossed());
-                    current_location = loc;
-                }
-            }
-
-            current_marker = marker;
-            current_location.isCrossed(true);
-            current_marker .setAnimation(google.maps.Animation.BOUNCE);
-            return marker;
-        };
-        // google maps animation
-        map = new google.maps.Map(document.getElementById('map'), {
+        // initialize variables
+        // GOOGLE MAPS
+       var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 11,
             center: {lat: 47.6062, lng: -122.3321},
             styles: [
@@ -127,89 +103,115 @@ function initApp() {
                 }
             ]
         });
-        // google maps marker icon url
-        var marker_img_url = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
-        // initialize markers array
         var markers = DB.map(function(location, i) {
             // create a marker
             var marker =  new google.maps.Marker({
                 position: { lat: location.lat, lng: location.lng },
                 animation: google.maps.Animation.DROP,
-                icon: marker_img_url,
+                icon: MARKER_IMG_URL,
                 label: location.park_name
             });
-            // set up animation (BOUNCE)
-            // var marker = new google.maps.Marker({
-            //     position: uluru,
-            //     map: map,
-            //     title: 'Uluru (Ayers Rock)'
-            // });
+
             marker.addListener('click', function(){
-                marker = setAnimation(marker, root.locations);
-                // var event = document.createEvent("Event");
-                // event.initEvent("clicker", true, true);
-                // console.log(event);
+                marker = _setAnimation(marker, root.locations);
             });
             return marker;
         });
         markers.map(function(marker){
             marker.setMap(map);
         });
-
-        // weather api call
-        var weather_url = "http://api.wunderground.com/api/a4e4d43e9da41acf/conditions/q/WA/Seattle.json";
-        $.getJSON(weather_url, function (response) {
+        // populate locations observable array
+        for(var i in DB) {
+            var marker = DB[i];
+            var city = ko.observable();
+            var obsv_isCrossed = ko.observable(marker.filtered);
+            root.locations.push({
+                'park_name': marker.park_name,
+                'isCrossed': obsv_isCrossed,
+                'city': city
+            });
+        }
+        // get area weather information
+        $.getJSON(WEATHER_URL, function (response) {
                 try {
-                    root.weatherIcon_url(response.current_observation.icon_url);
+                    root.weatherIcon_img(response.current_observation.icon_url);
                     root.weather(response.current_observation.feelslike_f);
-                    console.log(response.current_observation)
-                    console.log(root.weatherIcon_url());
+                    console.log(response.current_observation);
+                    console.log(root.weatherIcon_img());
                 }
                 catch(err) {
                     console.log(err);
                 }
             });
 
-        // create locations array from api.DB
-        try {
-            for (var i in DB) {
-                var marker = DB[i];
-                var city = ko.observable();
-                var obsv_isCrossed = ko.observable(marker.filtered);
-                root.locations.push({'park_name': marker.park_name, 'isCrossed': obsv_isCrossed, 'city':city});
+        // K.O. UI FUNCTIONS
+        /*@description animate marker and update corresponding list item style.
+         * Finally, update app current_selection states.
+         * @param {google maps maker} marker
+         * @param {ko.observable list} locations
+         * @returns {google maps maker} marker*/
+        var _setAnimation = function(marker, locations) {
+            var contentString = '<div id="content">'+
+                '<div id="siteNotice">'+
+                '</div>'+
+                '<h1 id="firstHeading" class="firstHeading">'+ marker.label + ' </h1>'+
+                '<div id="bodyContent">'+
+                '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+                'sandstone rock formation in the southern part of the '+
+                'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+                'south west of the nearest large town, Alice Springs; 450&#160;km '+
+                '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+                'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+                'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+                'Aboriginal people of the area. It has many springs, waterholes, '+
+                'rock caves and ancient paintings. Uluru is listed as a World '+
+                'Heritage Site.</p>'+
+                '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+                'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+                '(last visited June 22, 2009).</p>'+
+                '</div>'+
+                '</div>';
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            if (current_selection.marker) {
+                if (marker === current_selection.marker) { return; }
+                current_selection.marker.setAnimation(null);
             }
-        }catch(err) {
-            console.log("Error main.js line 200:");
-            console.log(err);
-        }
-        // function removes marker from Google Map
+            if (current_selection.location) {
+                current_selection.location.isCrossed(false);
+            }
+            if (current_selection.infowindow) {
+                current_selection.infowindow.close();
+            }
+
+            // find corresponding marker on
+            for (i = 0; i < locations().length; i++) {
+                var loc = locations()[i];
+                if ( loc && loc.park_name === marker.label) {
+                    current_selection.location = loc;
+                }
+            }
+
+            current_selection.marker = marker;
+            current_selection.location.isCrossed(true);
+            current_selection.infowindow = infowindow;
+            infowindow.open(map,marker);
+            current_selection.marker.setAnimation(google.maps.Animation.BOUNCE);
+            return current_selection.marker;
+        };
+        /*@description function listens to click event from locations list items.
+         *@param {location object} location
+         *@returns.
+         * */
         root.toggleListItem  = function(location) {
-            // if (current_location) {
-            //     current_location.isCrossed(!current_location.isCrossed());
-            // }
-            // else {
-            //     location.isCrossed(!location.isCrossed());
-            // }
-            // current_location = location;
             for (var i = 0; i < markers.length; i++) {
                var m = markers[i];
                if ( m.label=== location.park_name ) {
-                   setAnimation(m, root.locations);
+                   _setAnimation(m, root.locations);
                }
             }
-            // find marker in markers observable array
-            // updateUI()
-            // console.log(location.isCrossed());
         };
-        /*root.lineThrough = ko.pureComputed(function() {
-            var filter;
-            console.log("is filtered: "+ filtered);
-            var result;
-            if (filtered =='true')   {
-                return 'lineThrough';
-            }
-            return "";
-        });*/
     }
     ko.applyBindings(new initKOApp());
 }
