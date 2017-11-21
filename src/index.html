@@ -12,59 +12,50 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     </head>
     <body id="body">
-        <div id="control-panel">
-            <h1 id="panel-name">My Basketball Courts</h1>
-            <div id="filter">
-                <select>
-                    <option select="selected" value="NBA">NBA</option>
-                    <option value="WNBA">WNBA</option>
-                    <option value="High School">High School</option>
-                    <option value="My Favorite Parks">Tan's Favorite Park</option>
-                </select>
+        <div id="mySidenav" class="sidenav">
+            <span href="javascript:void(0)" class="closebtn"
+                  onclick="closeNav()">Seattle Ball Courts &times;</span>
+            <ul id="park-list"  data-bind="foreach: locations">
+                <li class="list-item"
+                    data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
+                    <span data-bind="click:$root.onToggleListItem, text:park_name, clickBubble: false"></span>
+                </li>
+            </ul>
+            <hr>
+            <div id="weather">
+                <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
             </div>
-            <h3> Hello </h3>
-            <div id='content'>
-                <ul id="park-list" data-bind="foreach: locations">
-                    <li class="list-item"
-                        data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
-                        <span data-bind="text: city"></span>
-                        <span data-bind="click:$root.toggleListItem, text:park_name"></span>
-                        <!--<span data-bind="css:filtered? 'line-through':''">-->
-                        <!--<span data-bind="text: park_name"></span>-->
-                        <!--</span>-->
-                    </li>
-                </ul>
-                <hr>
-                <div id="weather">
-                    <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
-                    <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
-                </div>
-                <!--<ul id="filter-list" data-bind="foreach: yelp_data">-->
-                    <!--<li>-->
-                        <!--<span data-bind="text: $data"></span>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            </div>
+            <div id="street_view"></div>
         </div>
+
+        <!-- Use any element to open the sidenav -->
+        <span id="openbtn" onclick="openNav()">Open Controls</span>
+
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
         <div id="map"></div>
+
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
-        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/DB.js"></script>
+        <script src="js/api.js"></script>
         <script src="js/main.js"></script>
         <script defer async
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=initApp">
         </script>
-        <style>
-            .line-through {
-                text-decoration: line-through;
-            }
-            #weather-icon{
-                opacity: .1;
-                width: 250px;
-                height: auto;
-            }
-            body{ cursor: default;}
-        </style>
+        <script>
+       /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+       function openNav() {
+           document.getElementById("mySidenav").style.width = "300px";
+           document.getElementById("park-list").style.width = "auto";
+           document.getElementById("openbtn").style.transform = "translateX(300px)";
+       }
+       /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+       function closeNav() {
+           document.getElementById("park-list").style.width = "0";
+           document.getElementById("mySidenav").style.width = "0";
+           document.getElementById("openbtn").style.transform = "translateX(0px)";
+       }
+   </script>
     </body>
 </html>
