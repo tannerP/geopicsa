@@ -43,7 +43,7 @@ body {
     margin: 0; }
   #mySidenav ul {
     height: 30%; }
-    #mySidenav ul li {
+    #mySidenav ul .list-item {
       text-align: center;
       padding: 8px 8px 8px 32px;
       text-decoration: none;
@@ -67,34 +67,48 @@ body {
     margin: 0;
     margin-right: 10px;
     overflow: auto;
-    white-space: nowrap;
-    font-size: .7em; }
-    #mySidenav #weather ul li {
-      text-align: center;
-      padding: auto;
-      display: inline-block;
-      width: 3%; }
-      #mySidenav #weather ul li #weather-icon {
-        display: block;
-        filter: grayscale(0.5);
-        padding: 0;
-        margin: 0;
-        opacity: 1;
-        width: 35px;
-        height: auto; }
-      #mySidenav #weather ul li #weather-temp {
-        position: relative;
-        bottom: 20px;
-        right: -4px;
-        font-size: .4em;
-        color: #f1fffd;
-        font-weight: bold; }
+    white-space: nowrap; }
+    #mySidenav #weather ul {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 5%; }
+      #mySidenav #weather ul li {
+        font-size: .7em;
+        align-content: center;
+        display: inline-block;
+        width: 20%;
+        padding: auto; }
+        #mySidenav #weather ul li #weather-icon {
+          opacity: .7;
+          display: block;
+          filter: grayscale(0.5);
+          padding: 0;
+          margin: 0;
+          width: 30px;
+          height: auto; }
+        #mySidenav #weather ul li .weather-hour {
+          position: relative;
+          font-size: .9em;
+          right: -4px;
+          color: #f1fffd;
+          font-weight: bold;
+          opacity: .8; }
+        #mySidenav #weather ul li #weather-temp {
+          position: relative;
+          font-size: .8em;
+          right: -15px;
+          color: #f1fffd;
+          font-weight: bold; }
     #mySidenav #weather #btm_content {
-      padding: 3px;
-      padding-left: 10px;
+      font-size: .5em;
+      opacity: .8;
+      padding: 10px;
       float: left; }
     #mySidenav #weather #rightside {
-      padding: 3px;
+      font-size: .6em;
+      opacity: .8;
+      padding: 10px;
       padding-right: 10px;
       float: right; }
   #mySidenav p {

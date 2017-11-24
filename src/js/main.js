@@ -24,6 +24,11 @@ function initApp() {
          root.locations = ko.observableArray();
          root.weather_forecast = ko.observableArray();
          root.weatherIcon_img= ko.observable({});
+         root.getCurrentTime = ko.computed(function(){});
+         root.current_time = ko.observable({
+             hr: new Date().getHours(),
+             min: new Date().getMinutes()
+         });
 
          // google maps marker, or list item selection
          var current_selection = {
@@ -41,20 +46,21 @@ function initApp() {
               * @returns {google maps maker} marker*/
              getWeather_from_URL: function(url, root) {
                 $.getJSON(url, function (response) {
-                    response.hourly_forecast.forEach(function(r){
-                            try {
-                                var r = response.hourly_forecast[0];
-                                root.weather_forecast()
-                                    .push(r.temp.english);
-                                root.weatherIcon_img(r.icon_url);
-                                root.weather(r.temp.english);
-                                // console.log(response.current_observation);
-                                // console.log(root.weatherIcon_img());
-                            }
-                            catch(err) {
-                                console.log(err);
-                            }
-                        });
+                    root.weather_forecast(response.hourly_forecast.splice(0,5));
+                    // response.hourly_forecast.forEach(function(r){
+                    //         try {
+                    //             var r = response.hourly_forecast[0];
+                    //             root.weather_forecast()
+                    //                 .push(r.temp.english);
+                    //             root.weatherIcon_img(r.icon_url);
+                    //             root.weather(r.temp.english);
+                    //             // console.log(response.current_observation);
+                    //             // console.log(root.weatherIcon_img());
+                    //         }
+                    //         catch(err) {
+                    //             console.log(err);
+                    //         }
+                    //     });
                 });
             },
              /*@description animate marker and update corresponding list item style.
@@ -146,7 +152,14 @@ function initApp() {
                }
             }
         };
-
+         root.formatTime = function(time) {
+            return time%12 + (time > 12? " PM":" AM");
+         };
+         root.getCurrentTime = function() {
+             var hour = new Date().getHours()%12;
+             var meridiem = hour > 12?  " PM":" AM";
+             return hour + ":" + new Date().getMinutes() + meridiem;
+         };
          // GOOGLE MAPS
          var map = new google.maps.Map(document.getElementById('map'), {
              zoom: 11,

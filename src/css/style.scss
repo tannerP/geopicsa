@@ -35,7 +35,6 @@ body {
     background-color: #111; /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
-    //transition: 0.8s; /* 0.5 second transition effect to slide in the sidenav */
     -webkit-transition: all 1s ease;
     ul, li {
         padding: 0;
@@ -43,7 +42,7 @@ body {
     }
     ul {
         height: 30%;
-        li {
+        .list-item {
             text-align: center;
             padding: 8px 8px 8px 32px;
             text-decoration: none;
@@ -71,38 +70,52 @@ body {
         overflow: auto;
         white-space: nowrap;
         ul {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 5%;
             li {
-                text-align: center;
-                padding: auto;
+                font-size: .7em;
+                align-content: center;
                 display: inline-block;
-                width: 3%;
+                width: 20%;
+                padding: auto;
                 #weather-icon {
+                    opacity: .7;
                     display: block;
                     filter: grayscale(.5);
                     padding: 0;
                     margin: 0;
-                    opacity: 1;
-                    width: 35px;
+                    width: 30px;
                     height: auto;
+                }
+                .weather-hour{
+                    position: relative;
+                    font-size: .9em;
+                    right: -4px;
+                    color: #f1fffd;
+                    font-weight: bold;
+                    opacity: .8;
                 }
                 #weather-temp {
                     position: relative;
-                    bottom: 20px;
-                    right: -4px;
-                    font-size: .4em;
+                    font-size: .8em;
+                    right: -15px;
                     color: #f1fffd;
                     font-weight: bold;
                 }
             }
         }
-        font-size: .7em;
         #btm_content {
-            padding: 3px;
-            padding-left: 10px;
+            font-size: .5em;
+            opacity: .8;
+            padding: 10px;
             float: left;
         }
         #rightside {
-            padding: 3px;
+            font-size: .6em;
+            opacity: .8;
+            padding: 10px;
             padding-right: 10px;
             float: right;
         }
