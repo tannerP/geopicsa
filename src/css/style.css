@@ -19,7 +19,7 @@ html {
 body {
   cursor: default; }
 
-.sidenav {
+#mySidenav {
   color: white;
   height: 100%;
   /* 100% Full-height */
@@ -37,22 +37,70 @@ body {
   /* Disable horizontal scroll */
   padding-top: 60px;
   /* Place content 60px from the top */
-  -webkit-transition: all 1s ease;
-  /* Position and style the close button (top right corner) */ }
-  .sidenav ul, .sidenav li {
+  -webkit-transition: all 1s ease; }
+  #mySidenav ul, #mySidenav li {
     padding: 0;
     margin: 0; }
-  .sidenav ul {
+  #mySidenav ul {
     height: 30%; }
-    .sidenav ul li {
-      color: white;
+    #mySidenav ul li {
+      text-align: center;
       padding: 8px 8px 8px 32px;
       text-decoration: none;
       font-size: 25px;
-      width: 100%;
+      width: auto;
       display: block;
       transition: .3s; }
-  .sidenav .closebtn {
+  #mySidenav hr {
+    margin-bottom: 0; }
+  #mySidenav #weather_title {
+    margin: 0;
+    margin-left: 10px;
+    display: inline-block;
+    padding: 0; }
+  #mySidenav #weather {
+    position: relative;
+    top: 5px;
+    width: 100%;
+    display: block;
+    padding: 0;
+    margin: 0;
+    margin-right: 10px;
+    overflow: auto;
+    white-space: nowrap;
+    font-size: .7em; }
+    #mySidenav #weather ul li {
+      text-align: center;
+      padding: auto;
+      display: inline-block;
+      width: 3%; }
+      #mySidenav #weather ul li #weather-icon {
+        display: block;
+        filter: grayscale(0.5);
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        width: 35px;
+        height: auto; }
+      #mySidenav #weather ul li #weather-temp {
+        position: relative;
+        bottom: 20px;
+        right: -4px;
+        font-size: .4em;
+        color: #f1fffd;
+        font-weight: bold; }
+    #mySidenav #weather #btm_content {
+      padding: 3px;
+      padding-left: 10px;
+      float: left; }
+    #mySidenav #weather #rightside {
+      padding: 3px;
+      padding-right: 10px;
+      float: right; }
+  #mySidenav p {
+    display: inline-block;
+    font-size: .7em; }
+  #mySidenav .closebtn {
     background: white;
     color: orange;
     width: 100%;
@@ -61,7 +109,7 @@ body {
     top: 0;
     font-size: 25px;
     padding: 10px; }
-  .sidenav #street_view {
+  #mySidenav #street_view {
     background: url(../img/renton.png);
     background-repeat: no-repeat;
     background-position: 10% 100%;
@@ -71,26 +119,6 @@ body {
     float: left;
     width: 100%;
     height: 50%; }
-
-#weather {
-  padding: 0;
-  margin: 0;
-  margin-left: 80%; }
-  #weather #weather-icon {
-    display: block;
-    filter: grayscale(0.5);
-    padding: 0;
-    margin: 0;
-    opacity: 1;
-    width: 50px;
-    height: auto; }
-  #weather #weather-temp {
-    position: relative;
-    bottom: 10px;
-    right: -20px;
-    font-size: .8em;
-    color: #f1fffd;
-    font-weight: bold; }
 
 #openbtn {
   writing-mode: tb-rl;

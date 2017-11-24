@@ -17,121 +17,132 @@ var UI = {
 function initApp() {
     "use strict";
      var initKOApp = function() {
-        var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/conditions/q/WA/Seattle.json",
+        var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
             MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
-         var root = this; //Knockout
+
+        var root = this; //Knockout
          root.locations = ko.observableArray();
-         root.weather = ko.observable();
+         root.weather_forecast = ko.observableArray();
          root.weatherIcon_img= ko.observable({});
+
+         // google maps marker, or list item selection
          var current_selection = {
-            location: "",
+            location: null,
             marker: null,
             infowindow: null
         };
-        var util = {
-            setAnimation: function(){},
-            getWeather_from_URL: function(){},
-            createObvLocations_from_DB: function(){}
-        };
-         /*@description animate marker and update corresponding list item style.
-          * Finally, update app current_selection states.
-          * @param {url} string
-          * @param {root} Knockout object
-          * @returns {google maps maker} marker*/
-         util.getWeather_from_URL = function(url, root) {
-            $.getJSON(url, function (response) {
-                try {
-                    root.weatherIcon_img(response.current_observation.icon_url);
-                    root.weather(response.current_observation.feelslike_f);
-                    // console.log(response.current_observation);
-                    // console.log(root.weatherIcon_img());
-                }
-                catch(err) {
-                    console.log(err);
-                }
-            });
-        };
-        /*@description animate marker and update corresponding list item style.
-          * Finally, update app current_selection states.
-          * @param {DB} object
-          * @param {root} Knockout object
-          * @returns {}, modified root  */
-         util.createObvLocations_from_DB = function(DB, root) {
-            DB.forEach(function(marker){
-                var city = ko.observable();
-                var obsv_isCrossed = ko.observable(marker.filtered);
-                root.locations.push({
-                    'park_name': marker.park_name,
-                    'isCrossed': obsv_isCrossed,
-                    'city': city
+
+         // app helper functions
+         var util = {
+             /*@description animate marker and update corresponding list item style.
+              * Finally, update app current_selection states.
+              * @param {url} string
+              * @param {root} Knockout object
+              * @returns {google maps maker} marker*/
+             getWeather_from_URL: function(url, root) {
+                $.getJSON(url, function (response) {
+                    response.hourly_forecast.forEach(function(r){
+                            try {
+                                var r = response.hourly_forecast[0];
+                                root.weather_forecast()
+                                    .push(r.temp.english);
+                                root.weatherIcon_img(r.icon_url);
+                                root.weather(r.temp.english);
+                                // console.log(response.current_observation);
+                                // console.log(root.weatherIcon_img());
+                            }
+                            catch(err) {
+                                console.log(err);
+                            }
+                        });
                 });
-            });
-        };
-         /*@description animate marker and update corresponding list item style.
-         * Finally, update app current_selection states.
-         * @param {google maps maker} marker
-         * @param {ko.observable list} locations
-         * @returns {google maps maker} marker*/
-         util.setAnimation = function(marker, locations) {
-            var contentString = '<div id="content">'+
-                '<div id="siteNotice">'+
-                '</div>'+
-                '<h2 id="firstHeading" class="firstHeading">'+ marker.label + ' </h2>'+
-                '</div>'+
-                '</div>';
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-            if (current_selection.marker) {
-                if (marker === current_selection.marker) { return; }
-                current_selection.marker.setAnimation(null);
-            }
-            if (current_selection.location) {
-                current_selection.location.isCrossed(false);
-            }
-            if (current_selection.infowindow) {
-                current_selection.infowindow.close();
-            }
-
-            // find corresponding marker on
-            for (i = 0; i < locations().length; i++) {
-                var loc = locations()[i];
-                if ( loc && loc.park_name === marker.label) {
-                    current_selection.location = loc;
-                }
-            }
-
-            console.log(marker.position.lat());
-            console.log(marker.position.lng());
-            var fenway = {lat: marker.position.lat(), lng: marker.position.lng()};
-            var panorama = new google.maps.StreetViewPanorama(
-                document.getElementById('street_view'), {
-                    position: fenway
-                    // pov: {
-                    //     heading: 34,
-                    //     pitch: 10
-                    // }
+            },
+             /*@description animate marker and update corresponding list item style.
+              * Finally, update app current_selection states.
+              * @param {google maps maker} marker
+              * @param {ko.observable list} locations
+              * @returns {google maps maker} marker*/
+             createObvLocations_from_DB: function(DB, root) {
+                DB.forEach(function(marker){
+                    var obsv_city = ko.observable();
+                    var obsv_isCrossed = ko.observable(marker.filtered);
+                    root.locations.push({
+                        park_name: marker.park_name,
+                        isCrossed: obsv_isCrossed,
+                        city: obsv_city
+                    });
                 });
+            },
+             /*@description animate marker and update corresponding list item style.
+             * Finally, update app current_selection states.
+             * @param {DB} object
+             * @param {root} Knockout object
+             * @returns {}, modified root  */
+             setAnimation: function(marker, locations) {
+                var contentString = '<div id="content">'+
+                    '<div id="siteNotice">'+
+                    '</div>'+
+                    '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                    '</div>'+
+                    '</div>';
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+                if (current_selection.marker) {
+                    if (marker === current_selection.marker) { return; }
+                    current_selection.marker.setAnimation(null);
+                }
+                if (current_selection.location) {
+                    current_selection.location.isCrossed(false);
+                }
+                if (current_selection.infowindow) {
+                    current_selection.infowindow.close();
+                }
 
-            map.setStreetView(panorama);
-            current_selection.marker = marker;
-            current_selection.location.isCrossed(true);
-            current_selection.infowindow = infowindow;
-            current_selection.marker.setAnimation(google.maps.Animation.BOUNCE);
-            infowindow.open(map,marker);
-            return current_selection.marker;
+                // find corresponding marker on
+                for (var i = 0; i < locations().length; i++) {
+                    var loc = locations()[i];
+                    if ( loc && loc.park_name === marker.title) {
+                        current_selection.location = loc;
+                    }
+                }
+                // console.log(current_selection);
+                // console.log(marker.position.lat());
+                // console.log(marker.position.lng());
+                var fenway = {lat: marker.position.lat(), lng: marker.position.lng()};
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('street_view'), {
+                        position: fenway
+                        // pov: {
+                        //     heading: 34,
+                        //     pitch: 10
+                        // }
+                    });
+
+                map.setStreetView(panorama);
+                current_selection.marker = marker;
+                current_selection.location.isCrossed(true);
+                current_selection.infowindow = infowindow;
+                current_selection.marker.setAnimation(google.maps.Animation.BOUNCE);
+                infowindow.open(map,marker);
+                return current_selection.marker;
+            }
         };
 
-        // KNOCKOUT
-        /*@description function listens to click event from locations list items.
+         // KNOCKOUT
+         /*@description function listens to click event from locations list items.
          *@param {location object} location
          *@returns.
          * */
-        root.onToggleListItem  = function(location) {
+         root.onToggleListItem  = function(location) {
             for (var i = 0; i < markers.length; i++) {
                var m = markers[i];
-               if ( m.label=== location.park_name ) {
+                console.log(m);
+
+               if ( m.title=== location.park_name ) {
+                   console.log("found");
                    util.setAnimation(m, root.locations);
+                   break;
                }
             }
         };
@@ -223,23 +234,25 @@ function initApp() {
          });
          var markers = DB.map(function(location) {
              var marker =  new google.maps.Marker({
+                 title: location.park_name,
                  position: { lat: location.lat, lng: location.lng },
                  animation: google.maps.Animation.DROP,
                  icon: MARKER_IMG_URL,
-                 label: location.park_name
+                 map: map
              });
              marker.addListener('click', function(){
                  marker = util.setAnimation(marker, root.locations);
              });
              return marker;
          });
+
          /*@description animate marker and update corresponding list item style.
           * Finally, update app current_selection states.
           * @param {google maps maker} marker
           * @param {ko.observable list} locations
           * @returns {google maps maker} marker*/
 
-         // Populate App Data
+         // App Main
         util.createObvLocations_from_DB(DB, root);
         util.getWeather_from_URL(WEATHER_URL, root);
     };

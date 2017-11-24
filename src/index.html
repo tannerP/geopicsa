@@ -22,9 +22,38 @@
                 </li>
             </ul>
             <hr>
+            <h5 id="weather_title">Weather Forecast</h5>
+            <p> - Next Five Hours</p>
             <div id="weather">
-                <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
-                <span id='weather-temp' data-bind="text:weather() + ' &#8457'"></span>
+                <ul>
+                    <li>
+                        <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                        <!--<span id='weather-temp' data-bind="text:weather_forecast()[0].temp + ' &#8457'">60</span>-->
+                        <span id='weather-temp'>60 &#8457</span>
+                    </li>
+                    <li>
+                        <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                        <span id='weather-temp'>60 &#8457</span>
+                    </li>
+                    <li>
+                        <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                        <span id='weather-temp'>60 &#8457</span>
+
+                    </li>  <li>
+                        <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                    <span id='weather-temp'>60 &#8457</span>
+
+                    </li>  <li>
+                        <img id="weather-icon" data-bind=" attr:{'src': weatherIcon_img()} " alt="weather icon">
+                    <span id='weather-temp'>60 &#8457</span>
+                    </li>
+                </ul>
+                <div id="btm_content">
+                    Seattle, WA
+                </div>
+                <div id="rightside">
+                    10:50 AM
+                </div>
             </div>
             <div id="street_view"></div>
         </div>
@@ -43,8 +72,5 @@
         <script defer async
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=initApp">
         </script>
-        <script>
-
-   </script>
     </body>
 </html>
