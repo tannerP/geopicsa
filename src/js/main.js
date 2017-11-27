@@ -1,43 +1,12 @@
 /**
  * Created by tanner on 9/25/17.
  */
-var UI = {
-    openNav: function () {
-        document.getElementById("mySidenav").style.width = "300px";
-        document.getElementById("park-list").style.width = "auto";
-        document.getElementById("openbtn").style.transform = "translateX(300px)";
-    },
-    closeNav: function() {
-        document.getElementById("park-list").style.width = "0";
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("openbtn").style.transform = "translateX(0px)";
-    }
-};
-
-function initApp() {
+function GooleMapsCBFnc() {
     "use strict";
      var initKOApp = function() {
-        var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
-            MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
+         var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
+             MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
 
-        var root = this; //Knockout
-         root.locations = ko.observableArray();
-         root.weather_forecast = ko.observableArray();
-         root.weatherIcon_img= ko.observable({});
-         root.getCurrentTime = ko.computed(function(){});
-         root.current_time = ko.observable({
-             hr: new Date().getHours(),
-             min: new Date().getMinutes()
-         });
-
-         // google maps marker, or list item selection
-         var current_selection = {
-            location: null,
-            marker: null,
-            infowindow: null
-        };
-
-         // app helper functions
          var util = {
              /*@description animate marker and update corresponding list item style.
               * Finally, update app current_selection states.
@@ -45,121 +14,148 @@ function initApp() {
               * @param {root} Knockout object
               * @returns {google maps maker} marker*/
              getWeather_from_URL: function(url, root) {
-                $.getJSON(url, function (response) {
-                    root.weather_forecast(response.hourly_forecast.splice(0,5));
-                    // response.hourly_forecast.forEach(function(r){
-                    //         try {
-                    //             var r = response.hourly_forecast[0];
-                    //             root.weather_forecast()
-                    //                 .push(r.temp.english);
-                    //             root.weatherIcon_img(r.icon_url);
-                    //             root.weather(r.temp.english);
-                    //             // console.log(response.current_observation);
-                    //             // console.log(root.weatherIcon_img());
-                    //         }
-                    //         catch(err) {
-                    //             console.log(err);
-                    //         }
-                    //     });
-                });
-            },
+                 $.getJSON(url, function (response) {
+                     root.weather_forecast(response.hourly_forecast.splice(0,5));
+                 });
+             },
              /*@description animate marker and update corresponding list item style.
               * Finally, update app current_selection states.
               * @param {google maps maker} marker
               * @param {ko.observable list} locations
               * @returns {google maps maker} marker*/
              createObvLocations_from_DB: function(DB, root) {
-                DB.forEach(function(marker){
-                    var obsv_city = ko.observable();
-                    var obsv_isCrossed = ko.observable(marker.filtered);
-                    root.locations.push({
-                        park_name: marker.park_name,
-                        isCrossed: obsv_isCrossed,
-                        city: obsv_city
-                    });
-                });
-            },
+                 DB.forEach(function(marker){
+                     var obsv_city = ko.observable();
+                     var obsv_isCrossed = ko.observable(marker.filtered);
+                     root.locations.push({
+                         park_name: marker.park_name,
+                         isCrossed: obsv_isCrossed,
+                         city: obsv_city
+                     });
+                 });
+             },
              /*@description animate marker and update corresponding list item style.
-             * Finally, update app current_selection states.
-             * @param {DB} object
-             * @param {root} Knockout object
-             * @returns {}, modified root  */
+              * Finally, update app current_selection states.
+              * @param {DB} object
+              * @param {root} Knockout object
+              * @returns {}, modified root  */
              setAnimation: function(marker, locations) {
-                var contentString = '<div id="content">'+
-                    '<div id="siteNotice">'+
-                    '</div>'+
-                    '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                    '</div>'+
-                    '</div>';
-                var infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
-                if (current_selection.marker) {
-                    if (marker === current_selection.marker) { return; }
-                    current_selection.marker.setAnimation(null);
-                }
-                if (current_selection.location) {
-                    current_selection.location.isCrossed(false);
-                }
-                if (current_selection.infowindow) {
-                    current_selection.infowindow.close();
-                }
+                 var contentString = '<div id="content">'+
+                     '<div id="siteNotice">'+
+                     '</div>'+
+                     '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                     '</div>'+
+                     '</div>';
+                 var infowindow = new google.maps.InfoWindow({
+                     content: contentString
+                 });
+                 if (current_selection.marker) {
+                     if (marker === current_selection.marker) { return; }
+                     current_selection.marker.setAnimation(null);
+                 }
+                 if (current_selection.location) {
+                     current_selection.location.isCrossed(false);
+                 }
+                 if (current_selection.infowindow) {
+                     current_selection.infowindow.close();
+                 }
 
-                // find corresponding marker on
-                for (var i = 0; i < locations().length; i++) {
-                    var loc = locations()[i];
-                    if ( loc && loc.park_name === marker.title) {
-                        current_selection.location = loc;
-                    }
-                }
-                // console.log(current_selection);
-                // console.log(marker.position.lat());
-                // console.log(marker.position.lng());
-                var fenway = {lat: marker.position.lat(), lng: marker.position.lng()};
-                var panorama = new google.maps.StreetViewPanorama(
-                    document.getElementById('street_view'), {
-                        position: fenway
-                        // pov: {
-                        //     heading: 34,
-                        //     pitch: 10
-                        // }
-                    });
+                 // find corresponding marker on
+                 for (var i = 0; i < locations().length; i++) {
+                     var loc = locations()[i];
+                     if ( loc && loc.park_name === marker.title) {
+                         current_selection.location = loc;
+                     }
+                 }
+                 // console.log(current_selection);
+                 // console.log(marker.position.lat());
+                 // console.log(marker.position.lng());
+                 var fenway = {lat: marker.position.lat(), lng: marker.position.lng()};
+                 var panorama = new google.maps.StreetViewPanorama(
+                     document.getElementById('street_view'), {
+                         position: fenway
+                         // pov: {
+                         //     heading: 34,
+                         //     pitch: 10
+                         // }
+                     });
 
-                map.setStreetView(panorama);
-                current_selection.marker = marker;
-                current_selection.location.isCrossed(true);
-                current_selection.infowindow = infowindow;
-                current_selection.marker.setAnimation(google.maps.Animation.BOUNCE);
-                infowindow.open(map,marker);
-                return current_selection.marker;
-            }
-        };
+                 map.setStreetView(panorama);
+                 current_selection.marker = marker;
+                 current_selection.location.isCrossed(true);
+                 current_selection.infowindow = infowindow;
+                 current_selection.marker.setAnimation(google.maps.Animation.BOUNCE);
+                 infowindow.open(map,marker);
+                 return current_selection.marker;
+             }
+         }; // app utility functions
+         var current_selection = {
+             marker: {
+                 location: null,
+                 marker: null,
+                 infowindow: null
+             },
+             city: ko.observable()
+         }; // app current selection
 
-         // KNOCKOUT
-         /*@description function listens to click event from locations list items.
-         *@param {location object} location
-         *@returns.
-         * */
-         root.onToggleListItem  = function(location) {
-            for (var i = 0; i < markers.length; i++) {
-               var m = markers[i];
-                console.log(m);
-
-               if ( m.title=== location.park_name ) {
-                   console.log("found");
-                   util.setAnimation(m, root.locations);
-                   break;
-               }
-            }
-        };
+         //KNOCKOUT APP
+         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
+         root.locations = ko.observableArray();
+         root.cities = ko.observableArray(['Seattle', 'Renton']);
+         root.weather_forecast = ko.observableArray();
+         // root.cityFilter = {
+         //     selected_city: ko.observable(),
+         //     li_StyleCompute: ko.computed(function(){}),
+         //
+         // };
+         // DATA FUNCTIONS
          root.formatTime = function(time) {
-            return time%12 + (time > 12? " PM":" AM");
+             var hour = time%12 === 0? 12: time%12;
+             var meridiem = time > 12? " PM":" AM";
+            return hour + meridiem;
          };
-         root.getCurrentTime = function() {
-             var hour = new Date().getHours()%12;
-             var meridiem = hour > 12?  " PM":" AM";
-             return hour + ":" + new Date().getMinutes() + meridiem;
+         root.currentTime = function () {
+                 var hour = new Date().getHours() % 12;
+                 var min = new Date().getMinutes();
+                 var meridiem = hour > 12 ? " PM" : " AM";
+                 // format ex: 12:00 AM
+                 if (hour == 0) {
+                     hour = 12;
+                 }
+                 if (min < 10) {
+                     min = "0" + min;
+                 }
+
+                 return hour + ":" + min + meridiem;
          };
+         // EVENT FUNCTIONS
+         /*@description function listens to click event from locations list items.
+          *@param {location object} location
+          *@returns.
+          * */
+         root.toggleListItem  = function(location) {
+             for (var i = 0; i < markers.length; i++) {
+                 var m = markers[i];
+                 if ( m.title === location.park_name ) {
+                     util.setAnimation(m, root.locations);
+                     break;
+                 }
+             }
+         };
+         root.toggleNav = function(state) {
+             if (state === 'open') {
+                 document.getElementById("mySidenav").style.width = "300px";
+                 document.getElementById("park-list").style.width = "auto";
+                 document.getElementById("openbtn").style.transform = "translateX(300px)";
+             }
+             else {
+                 document.getElementById("park-list").style.width = "0";
+                 document.getElementById("mySidenav").style.width = "0";
+                 document.getElementById("openbtn").style.transform = "translateX(0px)";
+             }
+
+         };
+
          // GOOGLE MAPS
          var map = new google.maps.Map(document.getElementById('map'), {
              zoom: 11,
@@ -259,15 +255,9 @@ function initApp() {
              return marker;
          });
 
-         /*@description animate marker and update corresponding list item style.
-          * Finally, update app current_selection states.
-          * @param {google maps maker} marker
-          * @param {ko.observable list} locations
-          * @returns {google maps maker} marker*/
-
-         // App Main
-        util.createObvLocations_from_DB(DB, root);
-        util.getWeather_from_URL(WEATHER_URL, root);
+         // START/MAIN
+         util.createObvLocations_from_DB(DB, root);
+         util.getWeather_from_URL(WEATHER_URL, root);
     };
     ko.applyBindings(new initKOApp());
 }
