@@ -16,17 +16,21 @@
         <div id="mySidenav" class="sidenav">
             <span href="javascript:void(0)" class="closebtn"
                   data-bind="click: toggleNav('close')">Seattle Ball Courts | x</span>
-            <ul id="park-list"  data-bind="foreach: locations">
-                <li class="list-item"
-                    data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
-                    <span data-bind="click:$root.toggleListItem, text:park_name, clickBubble: false"></span>
-                </li>
-            </ul>
+
             <label>Filter by city: </label>
-            <!--<ul id="city_list"  data-bind="foreach: list_cities">-->
-                <!--<li data-bind="text: $data">-->
-                <!--</li>-->
-            <!--</ul>-->
+            <ul id="city_list"  data-bind="foreach: cities">
+                <li data-bind="text: $data, click:$root.select_city($data),
+                                    css: { selected_btn: $root.currentCity() === $data}"></li>
+            </ul>
+            <label class="btn" data-bind="click: $root.select_city()"> clear </label>
+            <div id="park_list">
+                <ul data-bind="foreach: locations">
+                    <li class="list-item"
+                        data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
+                        <span data-bind="click:$root.toggleListItem, text:park_name, clickBubble: false"></span>
+                    </li>
+                </ul>
+            </div>
             <hr>
             <h5 id="weather_title">Seattle Weather Forecast</h5>
             <p> - Next Five Hours</p>
@@ -50,7 +54,6 @@
         <span id="openbtn" data-bind="click: toggleNav('open')">Open Controls</span>
         <!-- Google Map-->
         <div id="map"></div>
-
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/DB.js"></script>

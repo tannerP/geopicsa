@@ -38,24 +38,28 @@ body {
   padding-top: 60px;
   /* Place content 60px from the top */
   -webkit-transition: all 1s ease; }
-  #mySidenav ul, #mySidenav li {
-    padding: 0;
-    margin: 0; }
-  #mySidenav ul .list-item {
-    text-align: center;
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    width: auto;
-    display: block;
-    transition: .3s; }
+  #mySidenav #park_list {
+    height: 28%; }
+    #mySidenav #park_list ul {
+      display: inline;
+      padding-top: 3%; }
+      #mySidenav #park_list ul .list-item {
+        clear: left;
+        text-align: center;
+        padding-top: 8px;
+        text-decoration: none;
+        font-size: 1.3em;
+        width: auto;
+        display: block;
+        transition: 1s; }
   #mySidenav hr {
     clear: left;
     margin-bottom: 2px; }
   #mySidenav #weather_title {
-    margin-left: 10px;
     display: inline-block;
-    padding: 0; }
+    padding: 0;
+    margin: 0;
+    margin-left: 10px; }
   #mySidenav #weather {
     position: relative;
     top: 5px;
@@ -65,10 +69,11 @@ body {
     margin: 0;
     white-space: nowrap; }
     #mySidenav #weather ul {
-      width: 90%;
+      width: 94%;
       margin-left: auto;
       margin-right: auto;
-      margin-bottom: 5%; }
+      margin-bottom: 5%;
+      padding-left: 0; }
       #mySidenav #weather ul li {
         font-size: .7em;
         align-content: center;
@@ -135,11 +140,31 @@ body {
     padding: 10px 5px;
     font-size: .8em;
     display: inline-block; }
+  #mySidenav #filter {
+    height: auto; }
+  #mySidenav .btn {
+    opacity: 1;
+    background: white;
+    color: black;
+    border: 1px solid white;
+    border-radius: 5px;
+    font-size: .6em;
+    transition: .3s;
+    display: inline-block;
+    float: left;
+    width: auto;
+    padding: 3px;
+    margin: 4px; }
+  #mySidenav label:active {
+    color: orange; }
   #mySidenav #city_list {
     opacity: .8;
-    float: left;
     margin: 4px; }
     #mySidenav #city_list li:active, #mySidenav #city_list li:hover {
+      opacity: 1;
+      background: white;
+      color: black; }
+    #mySidenav #city_list .selected_btn {
       opacity: 1;
       background: white;
       color: black; }

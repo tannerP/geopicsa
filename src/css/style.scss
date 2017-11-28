@@ -36,29 +36,32 @@ body {
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     -webkit-transition: all 1s ease;
-    ul, li {
-        padding: 0;
-        margin: 0;
-    }
-    ul {
-        .list-item {
-            text-align: center;
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            width: auto;
-            display: block;
-            transition: .3s;
-        }
-    }
+   #park_list {
+       height: 28%;
+       ul {
+           display: inline;
+           padding-top: 3%;
+           .list-item {
+               clear: left;
+               text-align: center;
+               padding-top: 8px;
+               text-decoration: none;
+               font-size: 1.3em;
+               width: auto;
+               display: block;
+               transition: 1s;
+           }
+       }
+   }
     hr {
         clear: left;
         margin-bottom: 2px;
     }
     #weather_title {
-        margin-left: 10px;
         display: inline-block;
         padding: 0;
+        margin: 0;
+        margin-left: 10px;
     }
     #weather {
         position: relative;
@@ -69,10 +72,11 @@ body {
         margin: 0;
         white-space: nowrap;
         ul {
-            width: 90%;
+            width: 94%;
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 5%;
+            padding-left: 0;
             li {
                 font-size: .7em;
                 align-content: center;
@@ -150,18 +154,43 @@ body {
         padding: 10px 5px;
         font-size: .8em;
         display: inline-block;
-        //border: 1px solid white;
+        //margin-left: 5px;
+    }
+    #filter{
+        height: auto;
+    }
+    .btn {
+        opacity: 1;
+        background: white;
+        color: black;
+        border: 1px solid white;
+        border-radius: 5px;
+        font-size: .6em;
+        transition: .3s;
+        display: inline-block;
+        float: left;
+        width: auto;
+        padding: 3px;
+        margin: 4px;
+
+    }
+    label:active {
+        color: orange;
     }
     #city_list {
         opacity: .8;
-        float: left;
         margin: 4px;
         li:active, li:hover  {
             opacity: 1;
             background: white;
             color: black;
         }
-        li {
+        .selected_btn {
+            opacity: 1;
+            background: white;
+            color: black;
+        }
+       li {
             border: 1px solid white;
             border-radius: 5px;
             font-size: .6em;
