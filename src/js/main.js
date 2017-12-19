@@ -9,7 +9,7 @@ function GooleMapsCBFnc() {
          var WEATHER_URL = "https://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
              MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
 
-         
+
          // Knockout app
          var root = this;
          // Selected Data
