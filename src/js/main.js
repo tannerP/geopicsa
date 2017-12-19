@@ -4,29 +4,44 @@
 function GooleMapsCBFnc() {
     "use strict";
      var initKOApp = function() {
-         var WEATHER_URL = "http://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
+         // urls
+         var client_key = "4NKI5G3XVHY5WMGSRZ52IZLVA4M5XNSCUGVXNGFPIECBZS53";
+         var client_secret = "KFSCERJN5Z1H4K1DCV4XDTXSQ0OAVU0AMGG5QHVYHMT5YVWW";
+
+         var WEATHER_URL = "https://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
              MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
          var current_selection = {
-             marker: {
+             selection: {
                  location: null,
                  marker: null,
                  infowindow: null
              },
-             city: ko.observable()
+             city: ko.observable(),
+             reset: function(item) {
+                 if (this.selection.marker) {
+                     if (item) {
+                         // unique case, exit if marker already selected
+                         if (item === current_selection.selection.marker) {
+                             this.selection.infowindow.close(); return;
+                         }
+                     }
+                     this.selection.marker.setAnimation(null);
+                 }
+                 if (this.selection.location) {
+                     this.selection.location.isCrossed(false);
+                 }
+                 if (this.selection.infowindow) {
+                     this.selection.infowindow.close();
+                 }
+                 if (!this.selection.location == null){
+                     util.createObvLocations_from_DB(DB, root);
+                 }
+                 markers.forEach(function(m) {
+                     m.setVisible(true);
+                 });
+             }
          };
-         //KNOCKOUT DATA
-         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
-         // observables
-         root.locations = ko.observableArray();
-         root.cities = ko.observableArray(['Seattle', 'Renton', 'Bellevue']);
-         root.weather_forecast = ko.observableArray();
-         // computed observables
-         // root.cityFilter = {
-         //     selected_city: ko.observable(),
-         //     li_StyleCompute: ko.computed(function(){}),
-         //
-         // };
-         // DATA FUNCTIONS
+
          // utility functions
          var util = {
              /*@description animate marker and update corresponding list item style.
@@ -36,7 +51,10 @@ function GooleMapsCBFnc() {
               * @returns {google maps maker} marker*/
              getWeather_from_URL: function getWeather_from_URL(url, root) {
                  $.getJSON(url, function (response) {
+                     root.weather_message("Seattle Weather Forecast");
                      root.weather_forecast(response.hourly_forecast.splice(0,5));
+                 }).fail(function(error){
+                     root.weather_error_message("Status: No weather data.");
                  });
              },
              /*@description animate marker and update corresponding list item style.
@@ -62,135 +80,135 @@ function GooleMapsCBFnc() {
               * @param {root} Knockout object
               * @returns {}, modified root  */
              setAnimation: function setAnimation(marker, locations) {
-                 var contentString = '<div id="content">'+
-                     '<div id="siteNotice">'+
-                     '</div>'+
-                     '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                     '</div>'+
-                     '</div>';
-                 var infowindow = new google.maps.InfoWindow({
-                     content: contentString
-                 });
-                 if (current_selection.marker.marker) {
-                     if (marker === current_selection.marker.marker) { return; }
-                     current_selection.marker.marker.setAnimation(null);
-                 }
-                 if (current_selection.location) {
-                     current_selection.location.isCrossed(false);
-                 }
-                 if (current_selection.infowindow) {
-                     current_selection.infowindow.close();
-                 }
-
-                 // find corresponding marker on
+                 current_selection.reset(marker);
+                 // find marker from locations list.
                  for (var i = 0; i < locations().length; i++) {
                      var loc = locations()[i];
                      if ( loc && loc.park_name === marker.title) {
-                         current_selection.location = loc;
+                         current_selection.selection.location = loc;
                      }
                  }
-                 // console.log(current_selection);
-                 // console.log(marker.position.lat());
-                 // console.log(marker.position.lng());
+
+                 // street view
                  var fenway = {lat: marker.position.lat(), lng: marker.position.lng()};
                  var panorama = new google.maps.StreetViewPanorama(
                      document.getElementById('street_view'), {
                          position: fenway
-                         // pov: {
-                         //     heading: 34,
-                         //     pitch: 10
-                         // }
                      });
-
                  map.setStreetView(panorama);
-                 current_selection.marker.marker = marker;
-                 current_selection.location.isCrossed(true);
-                 current_selection.infowindow = infowindow;
-                 current_selection.marker.marker.setAnimation(google.maps.Animation.BOUNCE);
-                 infowindow.open(map,marker);
-                 return current_selection.marker.marker;
+
+
+                var url = "https://api.foursquare.com/v2/venues/"+
+                    "search?ll=" +  marker.position.lat() + "," +  marker.position.lng() +"&client_id=" +
+                    client_key + "&client_secret=" + client_secret + "&v=20170930";
+
+                $.ajax(url).done(function(data){
+                        // TODO check it first venue is the best one
+                        var summary = data.response.venues[0].hereNow.summary,
+                           nCheckedin= data.response.venues[0].stats.checkinsCount;
+
+                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                            '<hr>'+
+                             '<p>' + "Current: "+  summary + ' </p>'+
+                             '<p>' + "Checkedin: "+  nCheckedin + ' </p>'+
+                            "<p id='infoWindowLogo'> by Foursquare </p>"+
+                            '</div>' + '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({content: contentString});
+                        current_selection.selection.infowindow = infowindow;
+                        current_selection.selection.infowindow.open(map,marker);
+                        }).fail(function(error){
+
+                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                        '</div>' + '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({content: contentString});
+                        current_selection.selection.infowindow = infowindow;
+                        current_selection.selection.infowindow.open(map,marker);
+                        });
+
+                 // Foursquare
+                // TODO style info window
+                /*$.ajax(url)
+                    .done(function(data){
+                        console.log(data.response.venues[0]);
+                        // TODO check it first venue is the best one
+                        current_selection.selection.hereNow(data.response.venues[0].hereNow.summary);
+                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                            '<p >'+  current_selection.selection.hereNow() + ' </p>'+
+
+                            '</div>' + '</div>';
+                        var infowindow = new google.maps.InfoWindow({content: contentString});
+                        current_selection.selection.infowindow = infowindow;
+                        current_selection.selection.infowindow.open(map,marker);
+                    }).fail(function(error){
+                    var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                        '</div>' + '</div>';
+                    var infowindow = new google.maps.InfoWindow({content: contentString});
+                    current_selection.selection.infowindow = infowindow;
+                    current_selection.selection.infowindow.open(map,marker);
+                });
+*/
+                // marker
+                 current_selection.selection.marker = marker;
+                 current_selection.selection.marker.setAnimation(google.maps.Animation.BOUNCE);
+                 // update style
+                 current_selection.selection.location.isCrossed(true);
+                 return current_selection.selection.marker;
              },
              /*@description animate marker and update corresponding list item style.
               * Finally, update app current_selection states.
               * @param {DB} object
               * @param {root} Knockout object
               * @returns {}, modified root  */
-             filterByCity_from_DB: function filterByCity_from_DB(db, city, root) {
+             makers_filterByCity: function filterByCity_from_DB(city, markers) {
+                 for (var i = 0; i < markers.length; i++) {
+                     var m = markers[i];
+                     if ( m.title === location.park_name ) {
+                         util.setAnimation(m, root.locations);
+                         // this.processing = false;
+                         break;
+                     }
+                 }
+             },
+
+             // TODO *bottle neck
+             /*@description rebuild root.locations.
+              * @param {db} database.
+              * @param {root} Knockout object.
+              * @param {city} city of interest.
+              * @returns {}, modified root  */
+             filterByCity_from_DB: function filterByCity_from_DB(db, city, root, markers) {
                  root.locations.removeAll();
-                 db.forEach(function(location){
-                     if (location.city !== city) {return;}
+                 var parks = [];
+                 db.forEach(function (location) {
+                     if (location.city !== city) {
+                         return;
+                     }
                      var obsv_city = ko.observable();
                      var obsv_isCrossed = ko.observable(location.filtered);
+                     parks.push(location.park_name); //populate parks
                      root.locations.push({
                          park_name: location.park_name,
                          isCrossed: obsv_isCrossed,
                          city: obsv_city
                      });
                  });
-             }
-         };
 
-         // EVENT FUNCTIONS
 
-         /*@description function listens to click event from locations list items.
-          *@param {location object} location
-          *@returns.
-          * */
-         root.formatTime = function(time) {
-             var hour = time%12 === 0? 12: time%12;
-             var meridiem = time > 12? " PM":" AM";
-             return hour + meridiem;
-         };
-         root.currentTime = function () {
-             var hour = new Date().getHours() % 12;
-             var min = new Date().getMinutes();
-             var meridiem = hour > 12 ? " PM" : " AM";
-             // format ex: 12:00 AM
-             if (hour == 0) {
-                 hour = 12;
-             }
-             if (min < 10) {
-                 min = "0" + min;
-             }
-
-             return hour + ":" + min + meridiem;
-         };
-         root.toggleListItem  = function(location) {
-             for (var i = 0; i < markers.length; i++) {
-                 var m = markers[i];
-                 if ( m.title === location.park_name ) {
-                     util.setAnimation(m, root.locations);
-                     break;
+                 for (var j = 0; j < markers.length; j++) {
+                     var m = markers[j];
+                     m.setVisible(true);
+                     if ( parks.indexOf(m.title) === -1) {
+                         m.setVisible(false);
+                     }
                  }
              }
          };
-         root.toggleNav = function(state) {
-             if (state === 'open') {
-                 document.getElementById("mySidenav").style.width = "300px";
-                 document.getElementById("park_list").style.width = "auto";
-                 document.getElementById("openbtn").style.transform = "translateX(300px)";
-             }
-             else {
-                 document.getElementById("park_list").style.width = "0";
-                 document.getElementById("mySidenav").style.width = "0";
-                 document.getElementById("openbtn").style.transform = "translateX(0px)";
-             }
-         };
-         root.select_city = function(city) {
-             current_selection.city(city);
-             // console.log("running");
-             // console.log(current_selection.city());
-             if(!current_selection.city()){
-                 util.createObvLocations_from_DB(DB, root);
-             }
-             else {
-                 util.filterByCity_from_DB(DB, city, root);
-             }
-         };
-         root.currentCity = function(){
-             return current_selection.city();
-         };
-
          // GOOGLE MAPS
          var map = new google.maps.Map(document.getElementById('map'), {
              zoom: 11,
@@ -276,6 +294,82 @@ function GooleMapsCBFnc() {
                  }
              ]
          });
+        /* markers = {
+            hi: "hey",
+         };*/
+
+         // KNOCKOUT DATA
+         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
+         // observables
+         root.locations = ko.observableArray();
+         root.cities = ko.observableArray(['Seattle', 'Renton', 'Bellevue']);
+         root.weather_forecast = ko.observableArray();
+         root.weather_message = ko.observable();
+         root.weather_error_message = ko.observable();
+
+         // DATA FUNCTIONS
+         root.formatTime = function(time) {
+             var hour = time%12 === 0? 12: time%12;
+             var meridiem = time > 12? " PM":" AM";
+             return hour + meridiem;
+         };
+         root.clickToggleListItem  = function(location) {
+             for (var i = 0; i < markers.length; i++) {
+                 var m = markers[i];
+                 if ( m.title === location.park_name ) {
+                     util.setAnimation(m, root.locations);
+                     // this.processing = false;
+                     break;
+                 }
+             }
+         };
+         root.clickToggleNav = function(state) {
+             var slider_width= 320 + 'px';
+             if (state === 'open') {
+                 document.getElementById("mySidenav").style.width = slider_width;
+                 document.getElementById("park_list").style.width = "98%";
+                 document.getElementById("openbtn").style.transform = "translateX(280px)";
+             }
+             else {
+                 current_selection.reset();
+                 document.getElementById("park_list").style.width = "0";
+                 document.getElementById("mySidenav").style.width = "0";
+                 document.getElementById("openbtn").style.transform = "translateX(0px)";
+             }
+         };
+         root.select_city = function(city) {
+             //reset
+             if(!city){
+                 current_selection.reset();
+                 util.createObvLocations_from_DB(DB, root);
+             }
+             //filtering
+             else {
+                 util.filterByCity_from_DB(DB, city, root, markers);
+             }
+             current_selection.city(city);
+         };
+
+         // CURRENT STATE
+         root.currentCity = function() {
+             return current_selection.city();
+         };
+         root.currentTime = function () {
+             var hour = new Date().getHours() % 12;
+             var min = new Date().getMinutes();
+             var meridiem = hour > 12 ? " PM" : " AM";
+             // format ex: 12:00 AM
+             if (hour == 0) {
+                 hour = 12;
+             }
+             if (min < 10) {
+                 min = "0" + min;
+             }
+
+             return hour + ":" + min + meridiem;
+         };
+
+         // MAIN
          var markers = DB.map(function(location) {
              var marker =  new google.maps.Marker({
                  title: location.park_name,
@@ -289,11 +383,14 @@ function GooleMapsCBFnc() {
              });
              return marker;
          });
-
-         // START/MAIN
          util.createObvLocations_from_DB(DB, root);
          util.getWeather_from_URL(WEATHER_URL, root);
     };
 
      ko.applyBindings(new initKOApp());
+}
+
+function mapsAsyncError() {
+    $("#openbtn").css({'display': 'none'});
+    $('#map').append("<h1 style='text-align: center; color: orange'>  Error Loading Google Maps</h1>");
 }

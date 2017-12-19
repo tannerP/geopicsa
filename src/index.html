@@ -13,53 +13,55 @@
     </head>
     <body id="body">
         <!-- Transitional side nav-->
-        <div id="mySidenav" class="sidenav">
+        <aside id="mySidenav" class="sidenav">
             <span href="javascript:void(0)" class="closebtn"
-                  data-bind="click: toggleNav('close')">Seattle Ball Courts | x</span>
-
+                  data-bind="click: clickToggleNav('close')">Seattle Ball Courts | x</span>
             <label>Filter by city: </label>
             <ul id="city_list"  data-bind="foreach: cities">
-                <li data-bind="text: $data, click:$root.select_city($data),
-                                    css: { selected_btn: $root.currentCity() === $data}"></li>
+                <li data-bind="text: $data, clickBubble: false, click:$root.select_city($data),
+                                    css: { selected_btn: $root.currentCity() === $data}">
+                </li>
             </ul>
-            <label class="btn" data-bind="click: $root.select_city()"> clear </label>
+            <label class="btn" data-bind="click: $root.select_city(''),  clickBubble: false"> clear </label>
             <div id="park_list">
                 <ul data-bind="foreach: locations">
                     <li class="list-item"
-                        data-bind="style :{'text-decoration': isCrossed()==true? 'line-through':'none'}">
-                        <span data-bind="click:$root.toggleListItem, text:park_name, clickBubble: false"></span>
+                        data-bind="click:$root.clickToggleListItem, clickBubble: false,
+                         style :{'background-color': isCrossed()==true? 'orange':''}">
+                        <span data-bind="text:park_name"></span>
                     </li>
                 </ul>
             </div>
-            <hr>
-            <h5 id="weather_title">Seattle Weather Forecast</h5>
-            <p> - Next Five Hours</p>
+            <div id="street_view"></div>
             <div id="weather">
-                <ul data-bind="foreach: weather_forecast">
+                <!--<hr>-->
+                <h5 id="weather_title" data-bind="text: weather_message">Seattle Weather Forecast</h5>
+                <p data-bind=" visible: weather_error_message.length > 0 "> - Next Five Hours</p>
+                <ul
+                     data-bind="foreach: weather_forecast">
                     <li>
                         <span class='weather-hour' data-bind="text: $root.formatTime(FCTTIME.hour)"></span>
                         <!--<span class='weather-hour' data-bind="text: FCTTIME.min"></span>-->
-                        <img id="weather-icon" data-bind=" attr:{'src': icon_url} " alt="weather icon">
+                        <img id="weather-icon" data-bind=" attr:{'src': icon_url} " alt="weather forecast">
                         <span id='weather-temp' data-bind="text:temp.english + ' &#8457'">60</span>
                     </li>
                 </ul>
-                <div id="btm_content">
-                    Seattle, WA
-                </div>
-                <div id="rightside" data-bind="text:currentTime()"></div>
+                <div id="btm_content" data-bind="text:currentTime()">wunderground.com</div>
+                <div id="rightside">wunderground.com</div>
+                <h5 id="weather_error" data-bind="text: weather_error_message" style="color: orange;"></h5>
+
             </div>
-            <div id="street_view"></div>
-        </div>
+        </aside>
         <!-- mySidenav open button -->
-        <span id="openbtn" data-bind="click: toggleNav('open')">Open Controls</span>
+        <span id="openbtn" data-bind="click: clickToggleNav('open')">Open Controls</span>
         <!-- Google Map-->
-        <div id="map"></div>
+        <main id="map"></main>
         <script>window.jQuery || document.write('<script src="node_modules/jquery/dist/jquery.min.js"><\/script>')</script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/DB.js"></script>
-        <script src="js/api.js"></script>
+        <!--<script src="js/api.js"></script>-->
         <script src="js/main.js"></script>
-        <script defer async
+        <script defer async onerror="mapsAsyncError()"
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1v6aSA9Gj2q2i9kjbwPVUjiQnNt7gVIc&callback=GooleMapsCBFnc">
         </script>
     </body>
