@@ -4,6 +4,9 @@
 function GooleMapsCBFnc() {
     "use strict";
      var initKOApp = function() {
+         // KNOCKOUT DATA
+         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
+         // observables
          // urls
          var client_key = "4NKI5G3XVHY5WMGSRZ52IZLVA4M5XNSCUGVXNGFPIECBZS53";
          var client_secret = "KFSCERJN5Z1H4K1DCV4XDTXSQ0OAVU0AMGG5QHVYHMT5YVWW";
@@ -118,41 +121,17 @@ function GooleMapsCBFnc() {
                         var infowindow = new google.maps.InfoWindow({content: contentString});
                         current_selection.selection.infowindow = infowindow;
                         current_selection.selection.infowindow.open(map,marker);
-                        }).fail(function(error){
+                        })
+                        .fail(function(error){
+                            var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                            '</div>' + '</div>';
 
-                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
-                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                        '</div>' + '</div>';
-
-                        var infowindow = new google.maps.InfoWindow({content: contentString});
-                        current_selection.selection.infowindow = infowindow;
-                        current_selection.selection.infowindow.open(map,marker);
+                            var infowindow = new google.maps.InfoWindow({content: contentString});
+                            current_selection.selection.infowindow = infowindow;
+                            current_selection.selection.infowindow.open(map,marker);
                         });
 
-                 // Foursquare
-                // TODO style info window
-                /*$.ajax(url)
-                    .done(function(data){
-                        console.log(data.response.venues[0]);
-                        // TODO check it first venue is the best one
-                        current_selection.selection.hereNow(data.response.venues[0].hereNow.summary);
-                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
-                            '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                            '<p >'+  current_selection.selection.hereNow() + ' </p>'+
-
-                            '</div>' + '</div>';
-                        var infowindow = new google.maps.InfoWindow({content: contentString});
-                        current_selection.selection.infowindow = infowindow;
-                        current_selection.selection.infowindow.open(map,marker);
-                    }).fail(function(error){
-                    var contentString = '<div id="content">'+ '<div id="siteNotice">'+
-                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                        '</div>' + '</div>';
-                    var infowindow = new google.maps.InfoWindow({content: contentString});
-                    current_selection.selection.infowindow = infowindow;
-                    current_selection.selection.infowindow.open(map,marker);
-                });
-*/
                 // marker
                  current_selection.selection.marker = marker;
                  current_selection.selection.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -209,6 +188,20 @@ function GooleMapsCBFnc() {
                  }
              }
          };
+         root.toggleNav = function(state) {
+             if (state === 'open') {
+                 document.getElementById("mySidenav").style.width = "300px";
+                 document.getElementById("park-list").style.width = "auto";
+                 document.getElementById("openbtn").style.transform = "translateX(300px)";
+             }
+             else {
+                 document.getElementById("park-list").style.width = "0";
+                 document.getElementById("mySidenav").style.width = "0";
+                 document.getElementById("openbtn").style.transform = "translateX(0px)";
+             }
+
+         };
+
          // GOOGLE MAPS
          var map = new google.maps.Map(document.getElementById('map'), {
              zoom: 11,
@@ -298,9 +291,6 @@ function GooleMapsCBFnc() {
             hi: "hey",
          };*/
 
-         // KNOCKOUT DATA
-         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
-         // observables
          root.locations = ko.observableArray();
          root.cities = ko.observableArray(['Seattle', 'Renton', 'Bellevue']);
          root.weather_forecast = ko.observableArray();
@@ -386,7 +376,6 @@ function GooleMapsCBFnc() {
          util.createObvLocations_from_DB(DB, root);
          util.getWeather_from_URL(WEATHER_URL, root);
     };
-
      ko.applyBindings(new initKOApp());
 }
 
