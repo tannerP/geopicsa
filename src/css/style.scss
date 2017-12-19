@@ -32,7 +32,10 @@ body {
     width: 100%;
     height: 50%;
 }
-
+#infoWindowLogo{
+    font-size: .8em;
+    float:right;
+}
 //desktop
 @media (min-width: 500px) {
     #mySidenav {
@@ -409,7 +412,6 @@ body {
         }
     }
 }
-
 
 #openbtn {
     writing-mode: tb-rl;
