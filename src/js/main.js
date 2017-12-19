@@ -4,15 +4,15 @@
 function GooleMapsCBFnc() {
     "use strict";
      var initKOApp = function() {
-         // KNOCKOUT DATA
-         var root = this; // declaration is part of k.o. style. Use 'root' avoids latency.
-         // observables
-         // urls
          var client_key = "4NKI5G3XVHY5WMGSRZ52IZLVA4M5XNSCUGVXNGFPIECBZS53";
          var client_secret = "KFSCERJN5Z1H4K1DCV4XDTXSQ0OAVU0AMGG5QHVYHMT5YVWW";
-
          var WEATHER_URL = "https://api.wunderground.com/api/a4e4d43e9da41acf/hourly/q/WA/Seattle.json",
              MARKER_IMG_URL = 'https://cdn3.iconfinder.com/data/icons/balls-icons/512/basketball-24.png';
+
+         
+         // Knockout app
+         var root = this;
+         // Selected Data
          var current_selection = {
              selection: {
                  location: null,
@@ -44,8 +44,7 @@ function GooleMapsCBFnc() {
                  });
              }
          };
-
-         // utility functions
+         // helper functions
          var util = {
              /*@description animate marker and update corresponding list item style.
               * Finally, update app current_selection states.
@@ -188,20 +187,6 @@ function GooleMapsCBFnc() {
                  }
              }
          };
-         root.toggleNav = function(state) {
-             if (state === 'open') {
-                 document.getElementById("mySidenav").style.width = "300px";
-                 document.getElementById("park-list").style.width = "auto";
-                 document.getElementById("openbtn").style.transform = "translateX(300px)";
-             }
-             else {
-                 document.getElementById("park-list").style.width = "0";
-                 document.getElementById("mySidenav").style.width = "0";
-                 document.getElementById("openbtn").style.transform = "translateX(0px)";
-             }
-
-         };
-
          // GOOGLE MAPS
          var map = new google.maps.Map(document.getElementById('map'), {
              zoom: 11,
@@ -287,22 +272,15 @@ function GooleMapsCBFnc() {
                  }
              ]
          });
-        /* markers = {
-            hi: "hey",
-         };*/
 
+
+         // UI DATA MODEL
          root.locations = ko.observableArray();
          root.cities = ko.observableArray(['Seattle', 'Renton', 'Bellevue']);
          root.weather_forecast = ko.observableArray();
          root.weather_message = ko.observable();
          root.weather_error_message = ko.observable();
-
-         // DATA FUNCTIONS
-         root.formatTime = function(time) {
-             var hour = time%12 === 0? 12: time%12;
-             var meridiem = time > 12? " PM":" AM";
-             return hour + meridiem;
-         };
+         // UI FUNCTION
          root.clickToggleListItem  = function(location) {
              for (var i = 0; i < markers.length; i++) {
                  var m = markers[i];
@@ -339,8 +317,12 @@ function GooleMapsCBFnc() {
              }
              current_selection.city(city);
          };
-
-         // CURRENT STATE
+         root.formatTime = function(time) {
+             var hour = time%12 === 0? 12: time%12;
+             var meridiem = time > 12? " PM":" AM";
+             return hour + meridiem;
+         };
+         // UI STATES
          root.currentCity = function() {
              return current_selection.city();
          };
@@ -358,6 +340,7 @@ function GooleMapsCBFnc() {
 
              return hour + ":" + min + meridiem;
          };
+
 
          // MAIN
          var markers = DB.map(function(location) {
