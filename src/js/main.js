@@ -207,7 +207,6 @@ function GooleMaps_Success_CallBack() {
                         });
                 map.setStreetView(panorama);
 
-
                 // foursquare ----------------------------------------------------
                 var url = "https://api.foursquare.com/v2/venues/"+
                     "search?ll=" +  marker.position.lat() + "," +  marker.position.lng() +"&client_id=" +
@@ -228,8 +227,7 @@ function GooleMaps_Success_CallBack() {
                         "<p id='infoWindowLogo'> by Foursquare </p>"+
                         '</div>' + '</div>';
 
-                    var infowindow = new google.maps.InfoWindow({content: contentString});
-                    current_selection.selection.infowindow = infowindow;
+                    current_selection.selection.infowindow.setContent(contentString);
                     current_selection.selection.infowindow.open(map,marker);
                 })
                     .fail(function(error){
@@ -239,9 +237,7 @@ function GooleMaps_Success_CallBack() {
                             "<p id='infoWindowLogo'> by Foursquare </p>"+
                             '</div>' + '</div>';
                             '</div>' + '</div>';
-
-                        var infowindow = new google.maps.InfoWindow({content: contentString});
-                        current_selection.selection.infowindow = infowindow;
+                        current_selection.selection.infowindow.setContent(contentString);
                         current_selection.selection.infowindow.open(map,marker);
                     });
 
@@ -362,6 +358,7 @@ function GooleMaps_Success_CallBack() {
 
         // Run
         try {
+            current_selection.selection.infowindow = new google.maps.InfoWindow();
             var markers = DB.locations.map(function(location) {
                 var marker =  new google.maps.Marker({
                     title: location.park_name,
