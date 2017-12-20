@@ -95,7 +95,8 @@ function GooleMaps_Success_CallBack() {
     var initKOApp = function() {
         // Knockout app
         var root = this;
-        // Knockout model
+
+        // data models
         root.locations = ko.observableArray();
         root.cities = ko.observableArray(['Seattle', 'Renton', 'Bellevue']);
         root.weather_forecast = ko.observableArray();
@@ -104,12 +105,20 @@ function GooleMaps_Success_CallBack() {
 
         // helpers utilities and variables
         var client_key, client_secret, util = {
+            /*@description get keys from DB.
+             * @param {DB} database array object
+             * @returns {}, update client_key, client_secret  */
+            getKeys: function (DB){
+                client_key = DB.secret.client_key;
+                client_secret = DB.secret.client_secret;
+            },
+
             /*@ ajax call to get weather data
             * @param {url} string
             * @param {root} Knockout object
             * @update {root.weather_message, root.weather_forecast}
             * @returns {} */
-            getWeather_from_URL: function getWeather_from_URL(url, root) {
+            getWeatherData: function getWeather_from_URL(url, root) {
                 $.getJSON(url, function (response) {
                     root.weather_message("Seattle Weather Forecast");
                     root.weather_forecast(response.hourly_forecast.splice(0,5));
@@ -117,6 +126,7 @@ function GooleMaps_Success_CallBack() {
                     root.weather_error_message("Status: No weather data.");
                 });
             },
+
             /*@description animate marker and update corresponding list item style.
              * Finally, update app current_selection states.
              * @param {google maps maker} marker
@@ -135,74 +145,7 @@ function GooleMaps_Success_CallBack() {
                     });
                 });
             },
-            /*@description animate marker and update corresponding list item style.
-             * Finally, update app current_selection states.
-             * @param {DB} object
-             * @param {root} Knockout object
-             * @returns {}, modified root  */
-            setAnimation: function setAnimation(marker, locations) {
-                current_selection.reset(marker);
-                // find marker from locations list.
-                for (var i = 0; i < locations().length; i++) {
-                    var loc = locations()[i];
-                    if ( loc && loc.park_name === marker.title) {
-                        current_selection.selection.location = loc;
-                    }
-                }
 
-                // street view
-                var position = {lat: marker.position.lat(), lng: marker.position.lng()},
-                panorama = new google.maps.StreetViewPanorama(
-                    document.getElementById('street_view'), {
-                        position: position
-                    });
-                map.setStreetView(panorama);
-
-
-                // foursquare
-                var url = "https://api.foursquare.com/v2/venues/"+
-                    "search?ll=" +  marker.position.lat() + "," +  marker.position.lng() +"&client_id=" +
-                    client_key + "&client_secret=" + client_secret + "&v=20170930";
-                $.ajax(url).done(function(data){
-                    // TODO check it first venue is the best one
-                    var summary = data.response.venues[0].hereNow.summary,
-                        nCheckedin= data.response.venues[0].stats.checkinsCount;
-
-                    var contentString = '<div id="content">'+ '<div id="siteNotice">'+
-                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                        '<hr>'+
-                        '<p>' + "Current: "+  summary + ' </p>'+
-                        '<p>' + "Checkedin: "+  nCheckedin + ' </p>'+
-                        "<p id='infoWindowLogo'> by Foursquare </p>"+
-                        '</div>' + '</div>';
-
-                    var infowindow = new google.maps.InfoWindow({content: contentString});
-                    current_selection.selection.infowindow = infowindow;
-                    current_selection.selection.infowindow.open(map,marker);
-                })
-                    .fail(function(error){
-                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
-                            '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
-                            '</div>' + '</div>';
-
-                        var infowindow = new google.maps.InfoWindow({content: contentString});
-                        current_selection.selection.infowindow = infowindow;
-                        current_selection.selection.infowindow.open(map,marker);
-                    });
-
-                // marker
-                current_selection.selection.marker = marker;
-                current_selection.selection.marker.setAnimation(google.maps.Animation.BOUNCE);
-                current_selection.selection.location.isCrossed(true);
-                return current_selection.selection.marker;
-            },
-            /*@description get keys from DB.
-             * @param {DB} database array object
-             * @returns {}, update client_key, client_secret  */
-            getKeys: function (db){
-                client_key = db.secret.client_key;
-                client_secret = db.secret.client_secret;
-            },
             /*@description get keys from DB.
              * @param {DB} database array object
              * @returns {}, update client_key, client_secret  */
@@ -239,8 +182,74 @@ function GooleMaps_Success_CallBack() {
                         m.setVisible(false);
                     }
                 }
+            },
+
+            /*@description animate marker and update corresponding list item style.
+             * Finally, update app current_selection states.
+             * @param {DB} object
+             * @param {root} Knockout object
+             * @returns {}, modified root  */
+            setAnimation: function setAnimation(marker, locations) {
+                current_selection.reset(marker);
+                // find marker from locations list.
+                for (var i = 0; i < locations().length; i++) {
+                    var loc = locations()[i];
+                    if ( loc && loc.park_name === marker.title) {
+                        current_selection.selection.location = loc;
+                    }
+                }
+
+                // street view
+                var position = {lat: marker.position.lat(), lng: marker.position.lng()},
+                    panorama = new google.maps.StreetViewPanorama(
+                        document.getElementById('street_view'), {
+                            position: position
+                        });
+                map.setStreetView(panorama);
+
+
+                // foursquare ----------------------------------------------------
+                var url = "https://api.foursquare.com/v2/venues/"+
+                    "search?ll=" +  marker.position.lat() + "," +  marker.position.lng() +"&client_id=" +
+                    client_key + "&client_secret=" + client_secret + "&v=20170930";
+
+                $.ajax(url).done(function(data){
+                    // TODO check it first venue is the best one
+                    var summary = data.response.venues[0].hereNow.summary,
+                        nCheckedin= data.response.venues[0].stats.checkinsCount;
+
+                    var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                        '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                        '<hr>'+
+                        '<p>' + "Current: "+  summary + ' </p>'+
+                        '<p>' + "Checkedin: "+  nCheckedin + ' </p>'+
+                        "<p id='infoWindowLogo'> by Foursquare </p>"+
+                        '</div>' + '</div>';
+
+                    var infowindow = new google.maps.InfoWindow({content: contentString});
+                    current_selection.selection.infowindow = infowindow;
+                    current_selection.selection.infowindow.open(map,marker);
+                })
+                    .fail(function(error){
+                        var contentString = '<div id="content">'+ '<div id="siteNotice">'+
+                            '<h2 id="firstHeading" class="firstHeading">'+ marker.title + ' </h2>'+
+                            '</div>' + '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({content: contentString});
+                        current_selection.selection.infowindow = infowindow;
+                        current_selection.selection.infowindow.open(map,marker);
+                    });
+
+                // update current_selection
+                current_selection.selection.marker = marker;
+                current_selection.selection.marker.setAnimation(google.maps.Animation.BOUNCE);
+                current_selection.selection.location.isCrossed(true);
+
+
+                return current_selection.selection.marker;
             }
         };
+
         // current state
         var current_selection = {
             selection: {
@@ -274,6 +283,22 @@ function GooleMaps_Success_CallBack() {
             }
         };
 
+        // aside toggle
+        root.clickToggleNav = function(state) {
+            var slider_width= 320 + 'px';
+            if (state === 'open') {
+                document.getElementById("mySidenav").style.width = slider_width;
+                document.getElementById("park_list").style.width = "98%";
+                document.getElementById("openbtn").style.transform = "translateX(280px)";
+            }
+            else {
+                current_selection.reset();
+                document.getElementById("park_list").style.width = "0";
+                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("openbtn").style.transform = "translateX(0px)";
+            }
+        };
+
         // event functions
         root.clickToggleListItem  = function(location) {
             for (var i = 0; i < markers.length; i++) {
@@ -287,20 +312,6 @@ function GooleMaps_Success_CallBack() {
                     // this.processing = false;
                     break;
                 }
-            }
-        };
-        root.clickToggleNav = function(state) {
-            var slider_width= 320 + 'px';
-            if (state === 'open') {
-                document.getElementById("mySidenav").style.width = slider_width;
-                document.getElementById("park_list").style.width = "98%";
-                document.getElementById("openbtn").style.transform = "translateX(280px)";
-            }
-            else {
-                current_selection.reset();
-                document.getElementById("park_list").style.width = "0";
-                document.getElementById("mySidenav").style.width = "0";
-                document.getElementById("openbtn").style.transform = "translateX(0px)";
             }
         };
         root.select_city = function(city) {
@@ -317,11 +328,13 @@ function GooleMaps_Success_CallBack() {
             }
             current_selection.city(city);
         };
+
         // data function
         root.currentCity = function() {
             return current_selection.city();
         };
-        // time
+
+        // time formatting
         root.formatHrsMins = function(time) {
             var hour = time%12 === 0? 12: time%12;
             var meridiem = time > 12? " PM":" AM";
@@ -342,7 +355,6 @@ function GooleMaps_Success_CallBack() {
             return hour + ":" + min + meridiem;
         };
 
-        // console.log(DB.secrets);
         // Run
         try {
             var markers = DB.locations.map(function(location) {
@@ -359,7 +371,7 @@ function GooleMaps_Success_CallBack() {
                 return marker;
             });
             util.build_list_from_DB(DB, root);
-            util.getWeather_from_URL(WEATHER_URL, root);
+            util.getWeatherData(WEATHER_URL, root);
             util.getKeys(DB);
         }catch(err){
             throw err;
