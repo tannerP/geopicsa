@@ -33,7 +33,9 @@ body {
 #infoWindowLogo {
   font-size: .8em;
   float: right; }
-
+.error {
+    color: red;
+}
 @media (min-width: 500px) {
   #mySidenav {
     color: white;

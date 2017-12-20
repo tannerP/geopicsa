@@ -18,11 +18,11 @@
                   data-bind="click: clickToggleNav('close')">Seattle Ball Courts | x</span>
             <label>Filter by city: </label>
             <ul id="city_list"  data-bind="foreach: cities">
-                <li data-bind="text: $data, clickBubble: false, click:$root.select_city($data),
+                <li data-bind="text: $data, clickBubble: false, click:$root.selectCity($data),
                                     css: { selected_btn: $root.currentCity() === $data}">
                 </li>
             </ul>
-            <label class="btn" data-bind="click: $root.select_city(''),  clickBubble: false"> clear </label>
+            <label class="btn" data-bind="click: $root.selectCity(''),  clickBubble: false"> clear </label>
             <div id="park_list">
                 <ul data-bind="foreach: locations">
                     <li class="list-item"
